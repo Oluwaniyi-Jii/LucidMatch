@@ -1,3 +1,8 @@
 fastapi
 uvicorn
 python-multipart
+anthropic
+openai
+python-dotenv
+pydantic
+PyPDF2
