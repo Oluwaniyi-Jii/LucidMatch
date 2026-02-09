@@ -226,59 +226,227 @@ Return ONLY valid JSON matching the specified format."""
     
     def _fallback_parse(self, text: str) -> ParsedProfile:
         """
-        Basic regex-based parsing when LLM is not available.
-        Used for testing or when API keys are not configured.
+        Advanced regex-based parsing when LLM is not available.
+        Extracts skills, experience, education, achievements, and more.
         """
-        # Common skill keywords to look for
+        text_lower = text.lower()
+        
+        # === EXPANDED SKILL DETECTION ===
         tech_skills = [
-            "python", "javascript", "java", "c++", "sql", "react", "node.js",
-            "aws", "azure", "docker", "kubernetes", "git", "html", "css",
-            "typescript", "go", "rust", "scala", "r", "matlab", "tableau",
-            "excel", "powerpoint", "word", "jira", "confluence", "slack"
+            # Programming languages
+            "python", "javascript", "java", "c++", "c#", "sql", "typescript", "go", "rust", 
+            "scala", "r", "matlab", "php", "ruby", "swift", "kotlin",
+            # Frameworks & Libraries
+            "react", "angular", "vue", "node.js", "fastapi", "django", "flask", "spring",
+            "express", "next.js", "tensorflow", "pytorch", "pandas", "numpy", "scikit-learn",
+            # Databases
+            "postgresql", "mysql", "mongodb", "redis", "elasticsearch", "cassandra", "sqlite",
+            # Cloud & DevOps
+            "aws", "azure", "gcp", "docker", "kubernetes", "terraform", "jenkins", "ci/cd",
+            "linux", "unix", "bash", "shell",
+            # Tools
+            "git", "github", "gitlab", "jira", "confluence", "slack", "figma", "sketch",
+            # Data & Analytics
+            "tableau", "power bi", "looker", "excel", "spss", "sas", "hadoop", "spark",
+            "kafka", "airflow", "etl", "data warehouse", "machine learning", "deep learning",
+            # Other technical
+            "api", "rest", "graphql", "microservices", "html", "css", "sass"
         ]
         
         soft_skills = [
-            "leadership", "communication", "teamwork", "problem-solving",
-            "project management", "agile", "scrum", "mentoring", "presentation"
+            "leadership", "communication", "teamwork", "collaboration", "problem-solving",
+            "problem solving", "analytical", "critical thinking", "decision-making",
+            "project management", "time management", "organization", "planning",
+            "agile", "scrum", "kanban", "lean", "six sigma",
+            "mentoring", "coaching", "training", "teaching", "facilitation",
+            "presentation", "public speaking", "negotiation", "stakeholder management",
+            "customer service", "client relations", "sales", "marketing",
+            "research", "analysis", "documentation", "technical writing",
+            "creative", "innovation", "strategic thinking", "budgeting"
         ]
         
-        text_lower = text.lower()
+        domain_skills = [
+            # Healthcare
+            "patient care", "clinical", "nursing", "medical", "healthcare", "hipaa",
+            "emr", "epic", "cerner", "patient assessment", "diagnosis",
+            # UX/Design
+            "user research", "ux design", "ui design", "wireframing", "prototyping",
+            "usability testing", "user interviews", "journey mapping", "design thinking",
+            # Finance
+            "financial analysis", "accounting", "budgeting", "forecasting", "audit",
+            "risk management", "compliance", "investment", "trading",
+            # HR
+            "recruiting", "talent acquisition", "onboarding", "performance management",
+            "employee relations", "compensation", "benefits",
+            # Legal
+            "contract", "legal research", "compliance", "regulatory"
+        ]
         
-        # Find matching skills
-        found_tech = [s for s in tech_skills if s in text_lower]
-        found_soft = [s for s in soft_skills if s in text_lower]
+        # Find all matching skills
+        found_tech = []
+        found_soft = []
+        found_domain = []
+        
+        for skill in tech_skills:
+            if skill in text_lower:
+                found_tech.append(skill.title() if len(skill) > 3 else skill.upper())
+        
+        for skill in soft_skills:
+            if skill in text_lower:
+                found_soft.append(skill.title())
+        
+        for skill in domain_skills:
+            if skill in text_lower:
+                found_domain.append(skill.title())
+        
+        # Deduplicate
+        found_tech = list(dict.fromkeys(found_tech))[:15]
+        found_soft = list(dict.fromkeys(found_soft))[:10]
+        found_domain = list(dict.fromkeys(found_domain))[:10]
         
         # Build clusters
         clusters = {}
         if found_tech:
-            clusters["technical_skills"] = found_tech
+            clusters["Technical Skills"] = found_tech
         if found_soft:
-            clusters["soft_skills"] = found_soft
+            clusters["Soft Skills"] = found_soft
+        if found_domain:
+            clusters["Domain Expertise"] = found_domain
         
-        # Basic experience detection
-        years_match = re.search(r'(\d+)\+?\s*years?\s*(?:of\s*)?experience', text_lower)
-        exp_years = float(years_match.group(1)) if years_match else None
+        # === EXPERIENCE DETECTION ===
+        years_patterns = [
+            r'(\d+)\+?\s*years?\s*(?:of\s*)?experience',
+            r'(\d+)\+?\s*years?\s*in\s*(?:the\s*)?(?:field|industry)',
+            r'experience[:\s]+(\d+)\+?\s*years?',
+            r'(\d{4})\s*[-–]\s*(?:present|current|now)',  # Calculate from date range
+        ]
         
-        # Education detection
+        exp_years = None
+        for pattern in years_patterns[:-1]:
+            match = re.search(pattern, text_lower)
+            if match:
+                exp_years = float(match.group(1))
+                break
+        
+        # Try date range calculation
+        if exp_years is None:
+            date_match = re.search(r'(\d{4})\s*[-–]\s*(?:present|current|now|2026|2025|2024)', text_lower)
+            if date_match:
+                start_year = int(date_match.group(1))
+                exp_years = 2026 - start_year
+        
+        # Experience level based on years
+        if exp_years:
+            if exp_years >= 10:
+                exp_level = ProficiencyLevel.EXPERT
+            elif exp_years >= 5:
+                exp_level = ProficiencyLevel.ADVANCED
+            elif exp_years >= 2:
+                exp_level = ProficiencyLevel.INTERMEDIATE
+            else:
+                exp_level = ProficiencyLevel.BEGINNER
+        else:
+            exp_level = ProficiencyLevel.INTERMEDIATE
+        
+        # === EDUCATION DETECTION ===
         education = None
-        if "phd" in text_lower or "doctorate" in text_lower:
+        if any(term in text_lower for term in ["ph.d", "phd", "doctorate", "doctor of"]):
             education = "PhD"
-        elif "master" in text_lower or "mba" in text_lower:
-            education = "Master's"
-        elif "bachelor" in text_lower or "b.s." in text_lower or "b.a." in text_lower:
-            education = "Bachelor's"
-        elif "bootcamp" in text_lower or "certificate" in text_lower:
-            education = "Certificate/Bootcamp"
+        elif any(term in text_lower for term in ["master", "mba", "m.s.", "m.a.", "msc", "master's"]):
+            education = "Master's Degree"
+        elif any(term in text_lower for term in ["bachelor", "b.s.", "b.a.", "bsc", "undergraduate"]):
+            education = "Bachelor's Degree"
+        elif any(term in text_lower for term in ["associate", "a.s.", "a.a."]):
+            education = "Associate Degree"
+        elif any(term in text_lower for term in ["bootcamp", "coding bootcamp", "intensive program"]):
+            education = "Bootcamp Certificate"
+        elif "certificate" in text_lower or "certification" in text_lower:
+            education = "Professional Certificate"
+        elif "high school" in text_lower or "diploma" in text_lower:
+            education = "High School Diploma"
+        
+        # === CERTIFICATIONS ===
+        cert_patterns = [
+            r'certified\s+(\w+(?:\s+\w+)?)',
+            r'(\w+)\s+certification',
+            r'(aws|azure|gcp|pmp|scrum|cissp|cpa|cfa|six sigma)(?:\s+certified)?',
+        ]
+        certifications = []
+        for pattern in cert_patterns:
+            matches = re.findall(pattern, text_lower)
+            for match in matches:
+                if len(match) > 2:
+                    certifications.append(match.upper() if len(match) <= 5 else match.title())
+        certifications = list(dict.fromkeys(certifications))[:5]
+        
+        # === ACHIEVEMENTS ===
+        achievements = []
+        # Look for lines with numbers (quantified achievements)
+        lines = text.split('\n')
+        for line in lines:
+            line = line.strip()
+            # Skip short lines or headers
+            if len(line) < 20:
+                continue
+            # Look for achievement indicators
+            if any(indicator in line.lower() for indicator in [
+                'increased', 'decreased', 'reduced', 'improved', 'grew', 'achieved',
+                'saved', 'generated', 'launched', 'led', 'managed', 'built',
+                'developed', 'created', 'implemented', 'delivered', 'awarded',
+                '%', '$', 'million', 'thousand', 'team of'
+            ]):
+                # Clean bullet points
+                clean = re.sub(r'^[\s•\-\*·]+', '', line).strip()
+                if len(clean) > 15:
+                    achievements.append(clean[:150])
+        achievements = achievements[:8]
+        
+        # === INDUSTRIES ===
+        industries = []
+        industry_keywords = {
+            'healthcare': ['hospital', 'clinic', 'medical', 'patient', 'healthcare', 'nursing'],
+            'technology': ['software', 'tech', 'startup', 'saas', 'it ', 'information technology'],
+            'finance': ['bank', 'financial', 'investment', 'trading', 'fintech', 'insurance'],
+            'consulting': ['consulting', 'advisory', 'deloitte', 'mckinsey', 'bcg', 'pwc', 'ey', 'kpmg'],
+            'retail': ['retail', 'e-commerce', 'ecommerce', 'store', 'sales'],
+            'education': ['university', 'school', 'college', 'teaching', 'academic'],
+            'manufacturing': ['manufacturing', 'production', 'factory', 'industrial'],
+        }
+        for industry, keywords in industry_keywords.items():
+            if any(kw in text_lower for kw in keywords):
+                industries.append(industry.title())
+        
+        # === CONFIDENCE SCORE ===
+        # Based on how much info we extracted
+        confidence_factors = 0
+        if len(found_tech) + len(found_soft) >= 5: confidence_factors += 0.2
+        if exp_years: confidence_factors += 0.2
+        if education: confidence_factors += 0.2
+        if len(achievements) >= 2: confidence_factors += 0.2
+        if len(text) >= 500: confidence_factors += 0.1
+        if len(text) >= 1000: confidence_factors += 0.1
+        
+        confidence_score = min(0.9, 0.3 + confidence_factors)
+        
+        # === BUILD PROFILE ===
+        all_skills = found_tech + found_soft + found_domain
+        skills = [
+            Skill(
+                name=s, 
+                proficiency=ProficiencyLevel.ADVANCED if s in found_tech[:5] else ProficiencyLevel.INTERMEDIATE
+            ) 
+            for s in all_skills
+        ]
         
         return ParsedProfile(
             competency_clusters=clusters,
-            skills=[Skill(name=s, proficiency=ProficiencyLevel.INTERMEDIATE) for s in found_tech + found_soft],
+            skills=skills,
             experience_years=exp_years,
-            experience_level=ProficiencyLevel.INTERMEDIATE,
+            experience_level=exp_level,
             education_level=education,
-            certifications=[],
-            achievements=[],
-            industries=[],
-            confidence_score=0.5,  # Low confidence for fallback
-            raw_text_preview=None
+            certifications=certifications,
+            achievements=achievements,
+            industries=industries,
+            confidence_score=confidence_score,
+            raw_text_preview=text[:200] if text else None
         )

@@ -321,67 +321,256 @@ Return ONLY valid JSON matching the specified format."""
         job: JobDescription
     ) -> MatchResult:
         """
-        Basic matching when LLM is not available.
-        Uses simple keyword overlap for scoring.
+        Advanced matching when LLM is not available.
+        Uses multi-criteria scoring based on skills, experience, education, and achievements.
         """
-        # Collect all candidate skills
+        # === 1. SKILLS MATCHING (40% weight) ===
         candidate_skills = set()
+        candidate_skills_list = []
         for skills in profile.competency_clusters.values():
-            candidate_skills.update(s.lower() for s in skills)
+            for s in skills:
+                candidate_skills.add(s.lower())
+                candidate_skills_list.append(s.lower())
         for skill in profile.skills:
             candidate_skills.add(skill.name.lower())
+            candidate_skills_list.append(skill.name.lower())
         
-        # Collect job requirements
+        # Also extract keywords from raw text if available
+        resume_text = getattr(profile, '_raw_text', '') or ''
+        resume_lower = resume_text.lower()
+        
         job_skills = set()
+        job_required = []
         for req in job.required_skills:
             job_skills.add(req.skill.lower())
+            job_required.append(req.skill.lower())
         for skill in job.preferred_skills:
             job_skills.add(skill.lower())
         
-        # Calculate simple overlap
+        # Direct skill matches
+        direct_matches = candidate_skills.intersection(job_skills)
+        
+        # Fuzzy/partial matches (skill appears in resume text)
+        fuzzy_matches = set()
+        for job_skill in job_skills:
+            if job_skill in resume_lower:
+                fuzzy_matches.add(job_skill)
+            # Check for partial matches
+            for cand_skill in candidate_skills:
+                if job_skill in cand_skill or cand_skill in job_skill:
+                    fuzzy_matches.add(job_skill)
+        
+        all_matches = direct_matches.union(fuzzy_matches)
+        
         if job_skills:
-            overlap = len(candidate_skills.intersection(job_skills))
-            match_ratio = overlap / len(job_skills)
+            skills_ratio = len(all_matches) / len(job_skills)
         else:
-            match_ratio = 0.5
+            skills_ratio = 0.3
         
-        overall_score = min(100, int(match_ratio * 100))
+        skills_score = min(10, int(skills_ratio * 10) + 1)  # 1-10 scale
         
-        # Determine competency level
-        if overall_score >= 75:
+        # === 2. EXPERIENCE MATCHING (25% weight) ===
+        candidate_years = profile.experience_years or 0
+        required_min = job.experience_years_min or 0
+        required_max = job.experience_years_max or 10
+        
+        if candidate_years >= required_min:
+            if candidate_years <= required_max + 2:
+                experience_score = 8 + min(2, (candidate_years - required_min) / 2)
+            else:
+                # Overqualified - slight penalty
+                experience_score = 7
+        elif candidate_years >= required_min - 1:
+            experience_score = 6
+        elif candidate_years >= required_min - 2:
+            experience_score = 4
+        else:
+            experience_score = max(2, candidate_years)
+        
+        experience_score = min(10, max(1, int(experience_score)))
+        
+        # === 3. EDUCATION MATCHING (20% weight) ===
+        edu_levels = {
+            'phd': 10, 'doctorate': 10, 'doctor': 10,
+            'master': 8, 'masters': 8, 'mba': 8, 'ms': 8, 'ma': 8,
+            'bachelor': 6, 'bachelors': 6, 'bs': 6, 'ba': 6, 'bsc': 6,
+            'associate': 4, 'associates': 4,
+            'diploma': 3, 'certificate': 3, 'bootcamp': 3,
+            'high school': 2, 'ged': 2
+        }
+        
+        candidate_edu = (profile.education_level or '').lower()
+        candidate_edu_score = 3  # default
+        for level, score in edu_levels.items():
+            if level in candidate_edu:
+                candidate_edu_score = score
+                break
+        
+        required_edu = (job.education_required or '').lower()
+        required_edu_score = 5  # default bachelor-ish
+        for level, score in edu_levels.items():
+            if level in required_edu:
+                required_edu_score = score
+                break
+        
+        if candidate_edu_score >= required_edu_score:
+            education_score = 8 + min(2, (candidate_edu_score - required_edu_score) / 2)
+        elif candidate_edu_score >= required_edu_score - 2:
+            education_score = 6
+        else:
+            education_score = 4
+        
+        education_score = min(10, max(1, int(education_score)))
+        
+        # === 4. ACHIEVEMENTS MATCHING (15% weight) ===
+        achievements = profile.achievements or []
+        num_achievements = len(achievements)
+        
+        # Look for quantified achievements (numbers = good)
+        quantified = sum(1 for a in achievements if any(c.isdigit() for c in a))
+        
+        if num_achievements >= 5 and quantified >= 2:
+            achievement_score = 9
+        elif num_achievements >= 3 and quantified >= 1:
+            achievement_score = 7
+        elif num_achievements >= 2:
+            achievement_score = 5
+        elif num_achievements >= 1:
+            achievement_score = 4
+        else:
+            achievement_score = 2
+        
+        achievement_score = min(10, max(1, achievement_score))
+        
+        # === CALCULATE OVERALL SCORE ===
+        # Weighted average: Skills 40%, Experience 25%, Education 20%, Achievements 15%
+        overall_score = int(
+            skills_score * 4.0 +
+            experience_score * 2.5 +
+            education_score * 2.0 +
+            achievement_score * 1.5
+        )
+        overall_score = min(100, max(10, overall_score))
+        
+        # === CONFIDENCE LEVEL ===
+        # Based on how much data we have
+        data_completeness = 0
+        if len(candidate_skills) >= 5: data_completeness += 1
+        if profile.experience_years: data_completeness += 1
+        if profile.education_level: data_completeness += 1
+        if len(achievements) >= 2: data_completeness += 1
+        
+        if data_completeness >= 4:
+            conf_level = ConfidenceLevel.HIGH
+            conf_range = 5
+        elif data_completeness >= 2:
+            conf_level = ConfidenceLevel.MEDIUM
+            conf_range = 10
+        else:
+            conf_level = ConfidenceLevel.LOW
+            conf_range = 15
+        
+        # === COMPETENCY LEVEL ===
+        if overall_score >= 70:
             comp_level = CompetencyLevel.STRONG
-        elif overall_score >= 50:
+        elif overall_score >= 45:
             comp_level = CompetencyLevel.MID
         else:
             comp_level = CompetencyLevel.LOW
         
-        # Find gaps
+        # === SKILL GAPS ===
         gaps = []
-        missing = job_skills - candidate_skills
-        for skill in list(missing)[:5]:  # Top 5 gaps
+        missing = job_skills - all_matches
+        for skill in list(missing)[:5]:
+            priority = GapPriority.CRITICAL if skill in job_required[:3] else GapPriority.IMPORTANT
             gaps.append(SkillGap(
-                skill=skill,
-                priority=GapPriority.IMPORTANT,
+                skill=skill.title(),
+                priority=priority,
                 required_level=ProficiencyLevel.INTERMEDIATE,
-                learning_time_weeks=4
+                learning_time_weeks=3 if priority == GapPriority.CRITICAL else 4
             ))
+        
+        # === SKILL TRANSFERS ===
+        transfers = []
+        transfer_mappings = {
+            'patient': [('patient advocacy', 'user advocacy', 75), ('patient care', 'customer care', 70)],
+            'nurse': [('clinical assessment', 'user research', 65), ('care planning', 'project planning', 60)],
+            'teach': [('teaching', 'training', 80), ('curriculum', 'documentation', 65)],
+            'retail': [('customer service', 'client relations', 70), ('sales', 'business development', 60)],
+            'analysis': [('data analysis', 'analytics', 90), ('research', 'market research', 75)],
+            'manage': [('team management', 'leadership', 85), ('project management', 'agile', 70)],
+            'python': [('python', 'programming', 95), ('scripting', 'automation', 80)],
+            'communication': [('communication', 'stakeholder management', 80)],
+        }
+        
+        for keyword, mappings in transfer_mappings.items():
+            if keyword in resume_lower:
+                for cand_skill, job_skill, efficiency in mappings:
+                    if any(job_skill in js.lower() or js.lower() in job_skill for js in job_skills):
+                        transfers.append(SkillTransfer(
+                            candidate_skill=cand_skill.title(),
+                            job_requirement=job_skill.title(),
+                            transfer_efficiency=efficiency,
+                            reasoning=f"Experience with {cand_skill} transfers to {job_skill}"
+                        ))
+                        break
+        
+        # Limit transfers
+        transfers = transfers[:5]
+        
+        # === BUILD REASONING ===
+        strengths = []
+        concerns = []
+        
+        if skills_score >= 7:
+            strengths.append(f"Strong skill alignment ({len(all_matches)}/{len(job_skills)} skills)")
+        elif skills_score >= 5:
+            strengths.append(f"Moderate skill match ({len(all_matches)}/{len(job_skills)} skills)")
+        else:
+            concerns.append(f"Limited skill overlap ({len(all_matches)}/{len(job_skills)} skills)")
+        
+        if experience_score >= 7:
+            strengths.append(f"{candidate_years} years experience meets requirements")
+        elif experience_score < 5:
+            concerns.append(f"Experience gap: {candidate_years} years vs {required_min}+ required")
+        
+        if education_score >= 7:
+            strengths.append(f"Education ({profile.education_level}) meets or exceeds requirements")
+        elif education_score < 5:
+            concerns.append(f"Education level may not meet requirements")
+        
+        if achievement_score >= 7:
+            strengths.append(f"{num_achievements} demonstrated achievements with measurable impact")
+        elif achievement_score < 5:
+            concerns.append("Limited quantifiable achievements")
+        
+        if len(transfers) > 0:
+            strengths.append(f"Identified {len(transfers)} transferable skill areas")
+        
+        reasoning = f"Multi-criteria analysis: Skills {skills_score}/10, Experience {experience_score}/10, Education {education_score}/10, Achievements {achievement_score}/10. "
+        if overall_score >= 70:
+            reasoning += "Strong candidate with good overall fit."
+        elif overall_score >= 50:
+            reasoning += "Moderate fit with some areas for development."
+        else:
+            reasoning += "Significant gaps identified - may need substantial upskilling."
         
         return MatchResult(
             job_id=job.id,
             job_title=job.title,
             overall_score=overall_score,
-            confidence_range=15,  # High uncertainty for fallback
-            confidence_level=ConfidenceLevel.LOW,
+            confidence_range=conf_range,
+            confidence_level=conf_level,
             competency_level=comp_level,
-            skills_match_score=int(match_ratio * 10),
-            experience_match_score=5,
-            education_match_score=5,
-            achievement_match_score=5,
-            skill_transfers=[],
+            skills_match_score=skills_score,
+            experience_match_score=experience_score,
+            education_match_score=education_score,
+            achievement_match_score=achievement_score,
+            skill_transfers=transfers,
             skill_gaps=gaps,
-            reasoning_summary=f"Basic keyword matching found {overlap} overlapping skills out of {len(job_skills)} requirements. LLM analysis unavailable - this is a simplified match.",
-            strengths=[f"Has {len(candidate_skills)} identified skills"],
-            concerns=["Full AI analysis not available", f"Missing {len(missing)} required skills"]
+            reasoning_summary=reasoning,
+            strengths=strengths[:4],
+            concerns=concerns[:4]
         )
     
     async def evaluate_multiple_jobs(

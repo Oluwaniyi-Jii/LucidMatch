@@ -205,6 +205,7 @@ async def analyze_resume_upload(
         return {
             "profile": profile.model_dump(),
             "filename": file.filename,
+            "extracted_text": text,  # Return the extracted text for preview
             "processing_time_ms": processing_time
         }
     except Exception as e:
@@ -395,6 +396,151 @@ async def get_audit_log(match_id: str):
 
 
 # ============================================================================
+# Batch Processing Endpoints (Phase 3)
+# ============================================================================
+
+# Cost constants for enterprise scaling
+COST_PER_PROFILE = 0.12  # $0.12 per profile analysis
+
+class BatchAnalysisRequest(BaseModel):
+    """Request for batch resume analysis"""
+    resumes: list[str]  # List of resume texts
+    job_ids: Optional[list[str]] = None
+    include_upskilling: bool = True
+    include_audit: bool = True
+
+
+class BatchAnalysisResult(BaseModel):
+    """Result for a single resume in batch"""
+    index: int
+    profile: ParsedProfile
+    top_match: Optional[MatchResult] = None
+    upskill_path: Optional[UpskillPath] = None
+    audit: Optional[AuditResult] = None
+    processing_time_ms: int
+    success: bool = True
+    error: Optional[str] = None
+
+
+class BatchAnalysisResponse(BaseModel):
+    """Response for batch analysis"""
+    results: list[BatchAnalysisResult]
+    total_processed: int
+    successful: int
+    failed: int
+    total_processing_time_ms: int
+    cost_estimate: float  # $0.12 per profile
+
+
+@app.post("/api/analyze/batch", response_model=BatchAnalysisResponse)
+async def batch_analysis(request: BatchAnalysisRequest):
+    """
+    Batch analysis pipeline for multiple resumes.
+    
+    Useful for enterprise-scale processing and demo.
+    Returns cost estimate based on $0.12 per profile.
+    """
+    start_time = time.time()
+    results = []
+    successful = 0
+    failed = 0
+    
+    # Determine jobs to match against
+    if request.job_ids:
+        jobs = [JOB_STORE[jid] for jid in request.job_ids if jid in JOB_STORE]
+    else:
+        jobs = list(JOB_STORE.values())
+    
+    for idx, resume_text in enumerate(request.resumes):
+        resume_start = time.time()
+        try:
+            # Parse resume
+            profile = await parser_agent.parse_resume(text=resume_text, anonymize=True)
+            
+            # Match against jobs
+            matches = []
+            top_match = None
+            if jobs:
+                matches = await reasoner_agent.evaluate_multiple_jobs(profile, jobs)
+                top_match = matches[0] if matches else None
+            
+            # Upskilling
+            upskill_path = None
+            if request.include_upskilling and top_match:
+                upskill_path = await strategist_agent.generate_curriculum(top_match.skill_gaps)
+            
+            # Audit
+            audit = None
+            if request.include_audit and top_match:
+                audit = await auditor_agent.audit_decision(top_match, profile)
+            
+            processing_time = int((time.time() - resume_start) * 1000)
+            
+            results.append(BatchAnalysisResult(
+                index=idx,
+                profile=profile,
+                top_match=top_match,
+                upskill_path=upskill_path,
+                audit=audit,
+                processing_time_ms=processing_time,
+                success=True
+            ))
+            successful += 1
+            
+        except Exception as e:
+            processing_time = int((time.time() - resume_start) * 1000)
+            # Create a minimal profile for failed cases
+            from schemas import ConfidenceLevel
+            results.append(BatchAnalysisResult(
+                index=idx,
+                profile=ParsedProfile(
+                    candidate_id=f"failed_{idx}",
+                    skills=[],
+                    competency_clusters=[],
+                    experience_years=0,
+                    education_level="unknown",
+                    achievements=[],
+                    confidence_score=0.0,
+                    confidence_level=ConfidenceLevel.LOW,
+                    raw_text_hash="",
+                    anonymized=True
+                ),
+                processing_time_ms=processing_time,
+                success=False,
+                error=str(e)
+            ))
+            failed += 1
+    
+    total_time = int((time.time() - start_time) * 1000)
+    cost_estimate = len(request.resumes) * COST_PER_PROFILE
+    
+    return BatchAnalysisResponse(
+        results=results,
+        total_processed=len(request.resumes),
+        successful=successful,
+        failed=failed,
+        total_processing_time_ms=total_time,
+        cost_estimate=cost_estimate
+    )
+
+
+@app.get("/api/cost/estimate")
+async def estimate_cost(profile_count: int = 1):
+    """
+    Get cost estimate for processing resumes.
+    
+    Returns estimated cost at $0.12 per profile.
+    """
+    return {
+        "profile_count": profile_count,
+        "cost_per_profile": COST_PER_PROFILE,
+        "total_cost": round(profile_count * COST_PER_PROFILE, 2),
+        "currency": "USD",
+        "note": "Cost includes parsing, matching, upskilling, and audit for each profile."
+    }
+
+
+# ============================================================================
 # Debug / Demo Endpoints
 # ============================================================================
 
@@ -428,7 +574,8 @@ async def demo_quick_match(resume_text: str = Form(...), job_id: str = Form(...)
             "job": match.job_title,
             "score": f"{match.overall_score}% (±{match.confidence_range}%)",
             "competency": match.competency_level.value,
-            "passed_audit": audit.passed_audit
+            "passed_audit": audit.passed_audit,
+            "cost": COST_PER_PROFILE
         },
         "strengths": match.strengths,
         "concerns": match.concerns,
