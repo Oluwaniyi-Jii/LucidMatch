@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
     "jobs": [
         {
@@ -38,3 +39,102 @@
         }
     ]
 }
+=======
+[
+  {
+    "id": "ux-researcher-01",
+    "title": "UX Researcher",
+    "department": "Product Design",
+    "description": "We're looking for a UX Researcher to join our product team. You'll conduct user research, synthesize findings, and advocate for user needs in product decisions. This role requires empathy, strong communication skills, and the ability to translate user insights into actionable recommendations. You'll work closely with designers and product managers to shape our product roadmap.",
+    "required_skills": [
+      {"skill": "User Research", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "User Interviews", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "Data Analysis", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Communication", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Empathy", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Presentation Skills", "importance": "important", "required_level": "intermediate"}
+    ],
+    "preferred_skills": ["Figma", "Survey Design", "A/B Testing", "SQL"],
+    "experience_years_min": 2,
+    "experience_years_max": 6,
+    "education_required": "Bachelor's degree preferred but not required",
+    "industry": "Technology"
+  },
+  {
+    "id": "backend-engineer-01",
+    "title": "Backend Software Engineer",
+    "department": "Engineering",
+    "description": "Join our engineering team to build scalable backend systems. You'll design and implement APIs, work with databases, and ensure our systems can handle growth. We value clean code, testing, and collaborative problem-solving. Experience with cloud platforms is a plus.",
+    "required_skills": [
+      {"skill": "Python", "importance": "critical", "required_level": "advanced"},
+      {"skill": "SQL", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "REST APIs", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "Git", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Problem Solving", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Testing", "importance": "important", "required_level": "intermediate"}
+    ],
+    "preferred_skills": ["AWS", "Docker", "Kubernetes", "PostgreSQL", "Redis", "CI/CD"],
+    "experience_years_min": 1,
+    "experience_years_max": 5,
+    "education_required": "CS degree or equivalent experience",
+    "industry": "Technology"
+  },
+  {
+    "id": "data-analyst-01",
+    "title": "Data Analyst",
+    "department": "Business Intelligence",
+    "description": "We need a Data Analyst to turn data into insights. You'll work with stakeholders to understand business questions, analyze large datasets, create visualizations, and present findings to leadership. Strong SQL skills and experience with BI tools required.",
+    "required_skills": [
+      {"skill": "SQL", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Excel", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Data Visualization", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "Statistical Analysis", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Communication", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Problem Solving", "importance": "critical", "required_level": "intermediate"}
+    ],
+    "preferred_skills": ["Python", "Tableau", "Power BI", "R", "A/B Testing"],
+    "experience_years_min": 0,
+    "experience_years_max": 3,
+    "education_required": "Bachelor's in quantitative field",
+    "industry": "Finance"
+  },
+  {
+    "id": "product-manager-01",
+    "title": "Product Manager",
+    "department": "Product",
+    "description": "Lead product development from ideation to launch. You'll define product vision, gather requirements, prioritize features, and work with engineering and design teams. Strong analytical and communication skills required. Experience with agile methodologies preferred.",
+    "required_skills": [
+      {"skill": "Product Strategy", "importance": "critical", "required_level": "intermediate"},
+      {"skill": "Stakeholder Management", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Data Analysis", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Agile/Scrum", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Communication", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Leadership", "importance": "important", "required_level": "intermediate"}
+    ],
+    "preferred_skills": ["SQL", "Jira", "Figma", "A/B Testing", "User Research"],
+    "experience_years_min": 3,
+    "experience_years_max": 8,
+    "education_required": "Bachelor's degree",
+    "industry": "Technology"
+  },
+  {
+    "id": "ml-engineer-01",
+    "title": "Machine Learning Engineer",
+    "department": "AI/ML",
+    "description": "Build and deploy machine learning models at scale. You'll work on the full ML lifecycle from data preparation to model deployment. Strong programming skills and understanding of ML algorithms required. PhD not required if you can demonstrate practical experience.",
+    "required_skills": [
+      {"skill": "Python", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Machine Learning", "importance": "critical", "required_level": "advanced"},
+      {"skill": "Deep Learning", "importance": "important", "required_level": "intermediate"},
+      {"skill": "SQL", "importance": "important", "required_level": "intermediate"},
+      {"skill": "Statistics", "importance": "critical", "required_level": "advanced"},
+      {"skill": "MLOps", "importance": "important", "required_level": "intermediate"}
+    ],
+    "preferred_skills": ["TensorFlow", "PyTorch", "Kubernetes", "AWS SageMaker", "Spark"],
+    "experience_years_min": 2,
+    "experience_years_max": 7,
+    "education_required": "MS/PhD in CS, Math, Physics, or related field (or equivalent experience)",
+    "industry": "Technology"
+  }
+]
+>>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965
