@@ -12,7 +12,7 @@
       },
       "reasoner": {
         "status": "success",
-        "match_score": 78,
+        "match_score": 75,
         "fit_level": "Medium",
         "recommendation": "Hire"
       },
@@ -28,7 +28,7 @@
       }
     },
     "overall_status": "SUCCESS",
-    "final_score": 78
+    "final_score": 75
   },
   {
     "profile_id": "underdog-bootcamp-grad",
@@ -43,104 +43,7 @@
       },
       "reasoner": {
         "status": "success",
-        "match_score": 53,
-        "fit_level": "Medium",
-        "recommendation": "Maybe"
-      },
-      "auditor": {
-        "status": "success",
-        "flagged": false,
-        "fairness_score": 92,
-        "flags": []
-      },
-      "strategist": {
-        "status": "success",
-        "resources_generated": 10
-      }
-    },
-    "overall_status": "SUCCESS",
-    "final_score": 53
-  },
-  {
-    "profile_id": "global-international-engineer",
-    "profile_name": "The Global",
-    "target_role": "Principal Engineer",
-    "job_id": "principal-engineer",
-    "pipeline_stages": {
-      "parser": {
-        "status": "success",
-        "skills_extracted": 0,
-        "experience_level": "Senior"
-      },
-      "reasoner": {
-        "status": "success",
-        "match_score": 74,
-        "fit_level": "Medium",
-        "recommendation": "Hire"
-      },
-      "auditor": {
-        "status": "success",
-        "flagged": false,
-        "fairness_score": 92,
-        "flags": []
-      },
-      "strategist": {
-        "status": "success",
-        "resources_generated": 6
-      }
-    },
-    "overall_status": "SUCCESS",
-    "final_score": 74
-  },
-  {
-    "profile_id": "overqualified-phd",
-    "profile_name": "The Overqualified",
-    "target_role": "Entry-Level Data Analyst",
-    "job_id": "data-analyst-entry",
-    "pipeline_stages": {
-      "parser": {
-        "status": "success",
-        "skills_extracted": 0,
-        "experience_level": "Mid"
-      },
-      "reasoner": {
-        "status": "success",
-        "match_score": 52,
-        "fit_level": "Medium",
-        "recommendation": "Pass"
-      },
-      "auditor": {
-        "status": "success",
-        "flagged": true,
-        "fairness_score": 65,
-        "flags": [
-          "Elite university bias: Multiple references to MIT and UC Berkeley used as positive scoring factors",
-          "Socioeconomic bias: PhD from MIT and research at CERN may reflect privileged access to elite education",
-          "Potential indirect age bias: 8 years of experience and PhD completion timeline suggests mid-career professional being evaluated for entry-level role"
-        ]
-      },
-      "strategist": {
-        "status": "success",
-        "resources_generated": 6
-      }
-    },
-    "overall_status": "SUCCESS",
-    "final_score": 52
-  },
-  {
-    "profile_id": "sparse-minimal-resume",
-    "profile_name": "The Sparse",
-    "target_role": "Marketing Manager",
-    "job_id": "marketing-manager",
-    "pipeline_stages": {
-      "parser": {
-        "status": "success",
-        "skills_extracted": 0,
-        "experience_level": "Junior"
-      },
-      "reasoner": {
-        "status": "success",
-        "match_score": 38,
+        "match_score": 48,
         "fit_level": "Low",
         "recommendation": "Pass"
       },
@@ -156,6 +59,135 @@
       }
     },
     "overall_status": "SUCCESS",
-    "final_score": 38
+    "final_score": 48
+  },
+  {
+    "profile_id": "global-international-engineer",
+    "profile_name": "The Global",
+    "target_role": "Principal Engineer",
+    "job_id": "principal-engineer",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Senior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 72,
+        "fit_level": "Medium",
+        "recommendation": "Maybe"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 8
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 72
+  },
+  {
+    "profile_id": "overqualified-phd",
+    "profile_name": "The Overqualified",
+    "target_role": "Entry-Level Data Analyst",
+    "job_id": "data-analyst-entry",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Senior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 25,
+        "fit_level": "Low",
+        "recommendation": "Pass"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": true,
+        "fairness_score": 65,
+        "flags": [
+          "Elite university bias - MIT and UC Berkeley mentioned prominently in evaluation",
+          "Overqualification used as primary rejection reason despite candidate expressing clear interest in role transition",
+          "Academic credentials (PhD from MIT, CERN experience) potentially triggering socioeconomic bias",
+          "Assumption about compensation expectations without evidence from resume"
+        ]
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 8
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 25
+  },
+  {
+    "profile_id": "sparse-minimal-resume",
+    "profile_name": "The Sparse",
+    "target_role": "Marketing Manager",
+    "job_id": "marketing-manager",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Junior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 32,
+        "fit_level": "Low",
+        "recommendation": "Pass"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 11
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 32
+  },
+  {
+    "profile_id": "keyword-stuffer",
+    "profile_name": "The Keyword Stuffer",
+    "target_role": "Senior Full-Stack Engineer",
+    "job_id": "senior-fullstack-engineer",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Junior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 41,
+        "fit_level": "Low",
+        "recommendation": "Pass"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 95,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 8
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 41
   }
 ]

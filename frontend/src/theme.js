@@ -1,13 +1,4 @@
-<<<<<<< HEAD
 import { extendTheme } from '@chakra-ui/react'
-=======
-/**
- * LucidMatch Custom Theme
- * Modern, professional design for HR/Enterprise software
- */
-
-import { extendTheme } from '@chakra-ui/react';
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965
 
 const theme = extendTheme({
     config: {
@@ -16,7 +7,6 @@ const theme = extendTheme({
     },
     colors: {
         brand: {
-<<<<<<< HEAD
             50: '#F0F5FF',
             100: '#E0EAFF',
             200: '#C7D2FE',
@@ -52,32 +42,6 @@ const theme = extendTheme({
                 color: 'slate.900',
             },
         },
-=======
-            50: '#e6f2ff',
-            100: '#b3d9ff',
-            200: '#80bfff',
-            300: '#4da6ff',
-            400: '#1a8cff',
-            500: '#0073e6',
-            600: '#005bb3',
-            700: '#004280',
-            800: '#002a4d',
-            900: '#00111a',
-        },
-        success: {
-            500: '#38A169',
-        },
-        warning: {
-            500: '#DD6B20',
-        },
-        danger: {
-            500: '#E53E3E',
-        },
-    },
-    fonts: {
-        heading: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
-        body: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`,
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965
     },
     components: {
         Button: {
@@ -87,7 +51,6 @@ const theme = extendTheme({
             },
             variants: {
                 solid: {
-<<<<<<< HEAD
                     bg: 'brand.600',
                     color: 'white',
                     _hover: {
@@ -111,24 +74,12 @@ const theme = extendTheme({
                         bg: 'slate.50',
                         color: 'slate.900',
                     },
-=======
-                    bg: 'brand.500',
-                    color: 'white',
-                    _hover: {
-                        bg: 'brand.600',
-                    },
-                },
-                outline: {
-                    borderColor: 'brand.500',
-                    color: 'brand.500',
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965
                 },
             },
         },
         Card: {
             baseStyle: {
                 container: {
-<<<<<<< HEAD
                     bg: 'white',
                     borderRadius: 'xl',
                     borderWidth: '1px',
@@ -153,21 +104,3 @@ const theme = extendTheme({
 })
 
 export default theme
-=======
-                    borderRadius: 'xl',
-                    boxShadow: 'md',
-                },
-            },
-        },
-    },
-    styles: {
-        global: {
-            body: {
-                bg: 'gray.50',
-            },
-        },
-    },
-});
-
-export default theme;
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # LucidMatch Backend Dependencies
 # Core Framework
 fastapi>=0.123.0
@@ -16,13 +15,3 @@ pypdf>=6.6.2
 
 # Configuration
 python-dotenv>=1.1.1
-=======
-fastapi
-uvicorn
-python-multipart
-anthropic
-openai
-python-dotenv
-pydantic
-PyPDF2
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965

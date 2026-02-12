@@ -1,140 +1,40 @@
-<<<<<<< HEAD
 {
-    "jobs": [
-        {
-            "id": "ux-researcher",
-            "title": "UX Researcher",
-            "department": "Product Design",
-            "description": "We are seeking a UX Researcher to join our Product Design team. The ideal candidate will conduct user research to inform product decisions, synthesize findings into actionable insights, and advocate for user needs across the organization.\n\nResponsibilities:\n- Plan and conduct user research studies including interviews, usability tests, and surveys\n- Synthesize research findings into clear, actionable recommendations\n- Create personas, journey maps, and other research deliverables\n- Present research findings to stakeholders and cross-functional teams\n- Collaborate with designers and product managers to integrate user insights\n- Build and maintain research repository and best practices\n\nRequirements:\n- 2+ years of experience in UX research or related field\n- Experience with qualitative and quantitative research methods\n- Strong analytical and synthesis skills\n- Excellent communication and presentation abilities\n- Empathy and user advocacy mindset\n- Experience with research tools (UserTesting, Lookback, etc.) preferred\n\nPreferred:\n- Background in psychology, HCI, anthropology, or related field\n- Experience in healthcare or enterprise software\n- Portfolio of research case studies"
-        },
-        {
-            "id": "backend-engineer",
-            "title": "Backend Engineer",
-            "department": "Engineering",
-            "description": "We're looking for a Backend Engineer to join our growing engineering team. You'll work on building and scaling our core platform services that power millions of users.\n\nResponsibilities:\n- Design, build, and maintain scalable backend services\n- Write clean, efficient, and well-documented code\n- Participate in code reviews and contribute to engineering best practices\n- Collaborate with frontend engineers and product team\n- Debug production issues and improve system reliability\n- Contribute to architectural decisions and technical roadmap\n\nRequirements:\n- 3+ years of backend development experience\n- Strong proficiency in Python, Node.js, or Go\n- Experience with relational databases (PostgreSQL, MySQL)\n- Understanding of RESTful API design\n- Familiarity with cloud platforms (AWS, GCP, or Azure)\n- Experience with version control (Git) and CI/CD pipelines\n\nPreferred:\n- Computer Science degree or equivalent experience\n- Experience with containerization (Docker, Kubernetes)\n- Understanding of system design principles\n- Contributions to open-source projects"
-        },
-        {
-            "id": "principal-engineer",
-            "title": "Principal Engineer",
-            "department": "Engineering",
-            "description": "We are seeking a Principal Engineer to provide technical leadership across our engineering organization. This role combines deep technical expertise with strategic thinking to drive our platform architecture and engineering culture.\n\nResponsibilities:\n- Define and drive technical strategy for key platform initiatives\n- Design and architect systems handling millions of transactions\n- Mentor and develop senior engineers across teams\n- Establish engineering standards, best practices, and patterns\n- Partner with product and business leaders on roadmap planning\n- Lead cross-functional technical initiatives and vendor evaluations\n- Represent engineering in executive discussions\n\nRequirements:\n- 10+ years of software engineering experience\n- 5+ years of technical leadership experience\n- Expert-level knowledge of distributed systems architecture\n- Strong experience with cloud platforms (AWS, GCP, Azure)\n- Track record of designing and delivering large-scale systems\n- Excellent communication and stakeholder management skills\n- Experience mentoring and developing engineering talent\n\nPreferred:\n- MS or PhD in Computer Science\n- Experience at high-growth or enterprise scale\n- Public speaking or conference presentation experience\n- Open-source contributions or technical publications"
-        },
-        {
-            "id": "data-analyst-entry",
-            "title": "Data Analyst (Entry Level)",
-            "department": "Business Intelligence",
-            "description": "We're looking for an Entry-Level Data Analyst to join our Business Intelligence team. This is a great opportunity for recent graduates or career changers with strong analytical skills to start their data career.\n\nResponsibilities:\n- Analyze business data and create reports for stakeholders\n- Build and maintain dashboards in Tableau or similar tools\n- Write SQL queries to extract and transform data\n- Assist senior analysts with complex analysis projects\n- Document data sources and maintain data dictionary\n- Present findings to business teams\n\nRequirements:\n- Bachelor's degree in a quantitative field (Statistics, Economics, Business, etc.)\n- Basic proficiency in SQL\n- Experience with Excel and data visualization tools\n- Strong analytical and problem-solving skills\n- Good communication skills\n- Attention to detail\n\nPreferred:\n- Internship or project experience with data analysis\n- Familiarity with Python or R\n- Experience with Tableau, Power BI, or Looker\n- Statistics coursework"
-        },
-        {
-            "id": "marketing-manager",
-            "title": "Marketing Manager",
-            "department": "Marketing",
-            "description": "We are seeking an experienced Marketing Manager to lead our marketing initiatives and drive brand awareness and customer acquisition.\n\nResponsibilities:\n- Develop and execute integrated marketing campaigns\n- Manage marketing budget and optimize spending across channels\n- Lead team of 3-5 marketing specialists\n- Analyze campaign performance and report on ROI\n- Collaborate with sales and product teams on go-to-market strategies\n- Manage relationships with agencies and vendors\n\nRequirements:\n- 5+ years of marketing experience\n- 2+ years of people management experience\n- Proven track record of successful campaign execution\n- Experience with digital marketing channels (SEO, SEM, social, email)\n- Strong analytical skills and data-driven decision making\n- Excellent written and verbal communication\n- Budget management experience ($500K+)\n\nPreferred:\n- MBA or marketing certification\n- Experience in B2B SaaS or technology\n- Marketing automation platform experience (HubSpot, Marketo)\n- Brand management experience"
-        },
-        {
-            "id": "senior-fullstack-engineer",
-            "title": "Senior Full-Stack Engineer",
-            "department": "Engineering",
-            "description": "We are looking for a Senior Full-Stack Engineer to lead development of our customer-facing platform. You will architect and build features end-to-end, mentor junior engineers, and drive technical excellence.\n\nResponsibilities:\n- Design and implement complex full-stack features from conception to deployment\n- Lead technical design discussions and architecture reviews\n- Mentor junior and mid-level engineers through code reviews and pair programming\n- Own critical systems and drive performance optimization\n- Collaborate with product, design, and DevOps teams\n- Contribute to engineering blog and knowledge sharing\n\nRequirements:\n- 5+ years of professional full-stack development experience\n- Strong proficiency in React or Vue.js for frontend development\n- Expert-level backend skills in Node.js, Python, or Go\n- Experience designing and scaling production databases (PostgreSQL, MongoDB)\n- Track record of shipping features used by thousands of users\n- Strong understanding of CI/CD, testing, and DevOps practices\n- Experience with cloud platforms (AWS, GCP, or Azure)\n- Demonstrated ability to mentor and lead other engineers\n\nPreferred:\n- Experience with microservices architecture\n- Kubernetes and container orchestration experience\n- Contributions to open-source projects\n- Computer Science degree or equivalent demonstrated experience"
-        }
-    ]
+  "jobs": [
+    {
+      "id": "ux-researcher",
+      "title": "UX Researcher",
+      "department": "Product Design",
+      "description": "We are seeking a UX Researcher to join our Product Design team. The ideal candidate will conduct user research to inform product decisions, synthesize findings into actionable insights, and advocate for user needs across the organization.\n\nResponsibilities:\n- Plan and conduct user research studies including interviews, usability tests, and surveys\n- Synthesize research findings into clear, actionable recommendations\n- Create personas, journey maps, and other research deliverables\n- Present research findings to stakeholders and cross-functional teams\n- Collaborate with designers and product managers to integrate user insights\n- Build and maintain research repository and best practices\n\nRequirements:\n- 2+ years of experience in UX research or related field\n- Experience with qualitative and quantitative research methods\n- Strong analytical and synthesis skills\n- Excellent communication and presentation abilities\n- Empathy and user advocacy mindset\n- Experience with research tools (UserTesting, Lookback, etc.) preferred\n\nPreferred:\n- Background in psychology, HCI, anthropology, or related field\n- Experience in healthcare or enterprise software\n- Portfolio of research case studies"
+    },
+    {
+      "id": "backend-engineer",
+      "title": "Backend Engineer",
+      "department": "Engineering",
+      "description": "We're looking for a Backend Engineer to join our growing engineering team. You'll work on building and scaling our core platform services that power millions of users.\n\nResponsibilities:\n- Design, build, and maintain scalable backend services\n- Write clean, efficient, and well-documented code\n- Participate in code reviews and contribute to engineering best practices\n- Collaborate with frontend engineers and product team\n- Debug production issues and improve system reliability\n- Contribute to architectural decisions and technical roadmap\n\nRequirements:\n- 3+ years of backend development experience\n- Strong proficiency in Python, Node.js, or Go\n- Experience with relational databases (PostgreSQL, MySQL)\n- Understanding of RESTful API design\n- Familiarity with cloud platforms (AWS, GCP, or Azure)\n- Experience with version control (Git) and CI/CD pipelines\n\nPreferred:\n- Computer Science degree or equivalent experience\n- Experience with containerization (Docker, Kubernetes)\n- Understanding of system design principles\n- Contributions to open-source projects"
+    },
+    {
+      "id": "principal-engineer",
+      "title": "Principal Engineer",
+      "department": "Engineering",
+      "description": "We are seeking a Principal Engineer to provide technical leadership across our engineering organization. This role combines deep technical expertise with strategic thinking to drive our platform architecture and engineering culture.\n\nResponsibilities:\n- Define and drive technical strategy for key platform initiatives\n- Design and architect systems handling millions of transactions\n- Mentor and develop senior engineers across teams\n- Establish engineering standards, best practices, and patterns\n- Partner with product and business leaders on roadmap planning\n- Lead cross-functional technical initiatives and vendor evaluations\n- Represent engineering in executive discussions\n\nRequirements:\n- 10+ years of software engineering experience\n- 5+ years of technical leadership experience\n- Expert-level knowledge of distributed systems architecture\n- Strong experience with cloud platforms (AWS, GCP, Azure)\n- Track record of designing and delivering large-scale systems\n- Excellent communication and stakeholder management skills\n- Experience mentoring and developing engineering talent\n\nPreferred:\n- MS or PhD in Computer Science\n- Experience at high-growth or enterprise scale\n- Public speaking or conference presentation experience\n- Open-source contributions or technical publications"
+    },
+    {
+      "id": "data-analyst-entry",
+      "title": "Data Analyst (Entry Level)",
+      "department": "Business Intelligence",
+      "description": "We're looking for an Entry-Level Data Analyst to join our Business Intelligence team. This is a great opportunity for recent graduates or career changers with strong analytical skills to start their data career.\n\nResponsibilities:\n- Analyze business data and create reports for stakeholders\n- Build and maintain dashboards in Tableau or similar tools\n- Write SQL queries to extract and transform data\n- Assist senior analysts with complex analysis projects\n- Document data sources and maintain data dictionary\n- Present findings to business teams\n\nRequirements:\n- Bachelor's degree in a quantitative field (Statistics, Economics, Business, etc.)\n- Basic proficiency in SQL\n- Experience with Excel and data visualization tools\n- Strong analytical and problem-solving skills\n- Good communication skills\n- Attention to detail\n\nPreferred:\n- Internship or project experience with data analysis\n- Familiarity with Python or R\n- Experience with Tableau, Power BI, or Looker\n- Statistics coursework"
+    },
+    {
+      "id": "marketing-manager",
+      "title": "Marketing Manager",
+      "department": "Marketing",
+      "description": "We are seeking an experienced Marketing Manager to lead our marketing initiatives and drive brand awareness and customer acquisition.\n\nResponsibilities:\n- Develop and execute integrated marketing campaigns\n- Manage marketing budget and optimize spending across channels\n- Lead team of 3-5 marketing specialists\n- Analyze campaign performance and report on ROI\n- Collaborate with sales and product teams on go-to-market strategies\n- Manage relationships with agencies and vendors\n\nRequirements:\n- 5+ years of marketing experience\n- 2+ years of people management experience\n- Proven track record of successful campaign execution\n- Experience with digital marketing channels (SEO, SEM, social, email)\n- Strong analytical skills and data-driven decision making\n- Excellent written and verbal communication\n- Budget management experience ($500K+)\n\nPreferred:\n- MBA or marketing certification\n- Experience in B2B SaaS or technology\n- Marketing automation platform experience (HubSpot, Marketo)\n- Brand management experience"
+    },
+    {
+      "id": "senior-fullstack-engineer",
+      "title": "Senior Full-Stack Engineer",
+      "department": "Engineering",
+      "description": "We are looking for a Senior Full-Stack Engineer to lead development of our customer-facing platform. You will architect and build features end-to-end, mentor junior engineers, and drive technical excellence.\n\nResponsibilities:\n- Design and implement complex full-stack features from conception to deployment\n- Lead technical design discussions and architecture reviews\n- Mentor junior and mid-level engineers through code reviews and pair programming\n- Own critical systems and drive performance optimization\n- Collaborate with product, design, and DevOps teams\n- Contribute to engineering blog and knowledge sharing\n\nRequirements:\n- 5+ years of professional full-stack development experience\n- Strong proficiency in React or Vue.js for frontend development\n- Expert-level backend skills in Node.js, Python, or Go\n- Experience designing and scaling production databases (PostgreSQL, MongoDB)\n- Track record of shipping features used by thousands of users\n- Strong understanding of CI/CD, testing, and DevOps practices\n- Experience with cloud platforms (AWS, GCP, or Azure)\n- Demonstrated ability to mentor and lead other engineers\n\nPreferred:\n- Experience with microservices architecture\n- Kubernetes and container orchestration experience\n- Contributions to open-source projects\n- Computer Science degree or equivalent demonstrated experience"
+    }
+  ]
 }
-=======
-[
-  {
-    "id": "ux-researcher-01",
-    "title": "UX Researcher",
-    "department": "Product Design",
-    "description": "We're looking for a UX Researcher to join our product team. You'll conduct user research, synthesize findings, and advocate for user needs in product decisions. This role requires empathy, strong communication skills, and the ability to translate user insights into actionable recommendations. You'll work closely with designers and product managers to shape our product roadmap.",
-    "required_skills": [
-      {"skill": "User Research", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "User Interviews", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "Data Analysis", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Communication", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Empathy", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Presentation Skills", "importance": "important", "required_level": "intermediate"}
-    ],
-    "preferred_skills": ["Figma", "Survey Design", "A/B Testing", "SQL"],
-    "experience_years_min": 2,
-    "experience_years_max": 6,
-    "education_required": "Bachelor's degree preferred but not required",
-    "industry": "Technology"
-  },
-  {
-    "id": "backend-engineer-01",
-    "title": "Backend Software Engineer",
-    "department": "Engineering",
-    "description": "Join our engineering team to build scalable backend systems. You'll design and implement APIs, work with databases, and ensure our systems can handle growth. We value clean code, testing, and collaborative problem-solving. Experience with cloud platforms is a plus.",
-    "required_skills": [
-      {"skill": "Python", "importance": "critical", "required_level": "advanced"},
-      {"skill": "SQL", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "REST APIs", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "Git", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Problem Solving", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Testing", "importance": "important", "required_level": "intermediate"}
-    ],
-    "preferred_skills": ["AWS", "Docker", "Kubernetes", "PostgreSQL", "Redis", "CI/CD"],
-    "experience_years_min": 1,
-    "experience_years_max": 5,
-    "education_required": "CS degree or equivalent experience",
-    "industry": "Technology"
-  },
-  {
-    "id": "data-analyst-01",
-    "title": "Data Analyst",
-    "department": "Business Intelligence",
-    "description": "We need a Data Analyst to turn data into insights. You'll work with stakeholders to understand business questions, analyze large datasets, create visualizations, and present findings to leadership. Strong SQL skills and experience with BI tools required.",
-    "required_skills": [
-      {"skill": "SQL", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Excel", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Data Visualization", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "Statistical Analysis", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Communication", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Problem Solving", "importance": "critical", "required_level": "intermediate"}
-    ],
-    "preferred_skills": ["Python", "Tableau", "Power BI", "R", "A/B Testing"],
-    "experience_years_min": 0,
-    "experience_years_max": 3,
-    "education_required": "Bachelor's in quantitative field",
-    "industry": "Finance"
-  },
-  {
-    "id": "product-manager-01",
-    "title": "Product Manager",
-    "department": "Product",
-    "description": "Lead product development from ideation to launch. You'll define product vision, gather requirements, prioritize features, and work with engineering and design teams. Strong analytical and communication skills required. Experience with agile methodologies preferred.",
-    "required_skills": [
-      {"skill": "Product Strategy", "importance": "critical", "required_level": "intermediate"},
-      {"skill": "Stakeholder Management", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Data Analysis", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Agile/Scrum", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Communication", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Leadership", "importance": "important", "required_level": "intermediate"}
-    ],
-    "preferred_skills": ["SQL", "Jira", "Figma", "A/B Testing", "User Research"],
-    "experience_years_min": 3,
-    "experience_years_max": 8,
-    "education_required": "Bachelor's degree",
-    "industry": "Technology"
-  },
-  {
-    "id": "ml-engineer-01",
-    "title": "Machine Learning Engineer",
-    "department": "AI/ML",
-    "description": "Build and deploy machine learning models at scale. You'll work on the full ML lifecycle from data preparation to model deployment. Strong programming skills and understanding of ML algorithms required. PhD not required if you can demonstrate practical experience.",
-    "required_skills": [
-      {"skill": "Python", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Machine Learning", "importance": "critical", "required_level": "advanced"},
-      {"skill": "Deep Learning", "importance": "important", "required_level": "intermediate"},
-      {"skill": "SQL", "importance": "important", "required_level": "intermediate"},
-      {"skill": "Statistics", "importance": "critical", "required_level": "advanced"},
-      {"skill": "MLOps", "importance": "important", "required_level": "intermediate"}
-    ],
-    "preferred_skills": ["TensorFlow", "PyTorch", "Kubernetes", "AWS SageMaker", "Spark"],
-    "experience_years_min": 2,
-    "experience_years_max": 7,
-    "education_required": "MS/PhD in CS, Math, Physics, or related field (or equivalent experience)",
-    "industry": "Technology"
-  }
-]
->>>>>>> 04f2e20865491a82877a9095f96d8deea5f10965
