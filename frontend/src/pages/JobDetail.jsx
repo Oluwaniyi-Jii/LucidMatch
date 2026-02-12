@@ -1,9 +1,9 @@
-import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Progress, HStack, VStack, useDisclosure, Tabs, TabList, TabPanels, Tab, TabPanel, Code, Checkbox, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Skeleton } from '@chakra-ui/react'
+import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Table, Thead, Tbody, Tr, Th, Td, Badge, Drawer, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Progress, HStack, VStack, useDisclosure, Tabs, TabList, TabPanels, Tab, TabPanel, Code, Checkbox, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, Skeleton, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, IconButton, useToast } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import apiClient from '../api/client'
 import SkillRadar from '../components/SkillRadar'
-import { AlertCircle, CheckCircle2, BookOpen, Search, Terminal, Activity, Swords } from 'lucide-react'
+import { AlertCircle, CheckCircle2, BookOpen, Search, Terminal, Activity, Swords, Trash2, FileText } from 'lucide-react'
 
 const JobDetail = () => {
     const { id } = useParams()
@@ -13,10 +13,19 @@ const JobDetail = () => {
     const [compareSelection, setCompareSelection] = useState([])
     const [comparisonData, setComparisonData] = useState(null)
     const [isComparing, setIsComparing] = useState(false)
+    const [deleteId, setDeleteId] = useState(null)
+    const [isDeleting, setIsDeleting] = useState(false)
+    const cancelRef = useRef()
+    const toast = useToast()
 
     // Disclosures
     const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure()
     const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure()
+    const { isOpen: isResumeOpen, onOpen: onResumeOpen, onClose: onResumeClose } = useDisclosure()
+    const { isOpen: isAuditOpen, onOpen: onAuditOpen, onClose: onAuditClose } = useDisclosure()
+    const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false)
+    const [resumeText, setResumeText] = useState(null)
 
     useEffect(() => {
         const fetchJob = async () => {
@@ -36,6 +45,16 @@ const JobDetail = () => {
         const logs = candidate.agent_logs ? JSON.parse(candidate.agent_logs) : []
         setSelectedCandidate({ ...candidate, ...data, logs })
         onDrawerOpen()
+    }
+
+    const handleViewResume = (candidate) => {
+        try {
+            const data = JSON.parse(candidate.raw_json)
+            setResumeText(data.resume_text || "No resume text available for this candidate.")
+        } catch (e) {
+            setResumeText("Error loading resume text.")
+        }
+        onResumeOpen()
     }
 
     const toggleCompare = (id) => {
@@ -61,6 +80,39 @@ const JobDetail = () => {
             console.error("Comparison failed", error)
         } finally {
             setIsComparing(false)
+        }
+    }
+
+    const confirmDelete = (candidateId) => {
+        setDeleteId(candidateId)
+        onDeleteOpen()
+    }
+
+    const handleDelete = async () => {
+        setIsDeleting(true)
+        try {
+            await apiClient.delete(`/api/analyses/${deleteId}`)
+            setCandidates(prev => prev.filter(c => c.id !== deleteId))
+            toast({
+                title: "Applicant deleted",
+                description: "The candidate has been removed from this job.",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            })
+        } catch (error) {
+            console.error("Delete failed", error)
+            toast({
+                title: "Delete failed",
+                description: "Could not delete this applicant.",
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            })
+        } finally {
+            setIsDeleting(false)
+            setDeleteId(null)
+            onDeleteClose()
         }
     }
 
@@ -109,6 +161,9 @@ const JobDetail = () => {
                     <HStack>
                         <Badge colorScheme="brand">{job.department}</Badge>
                         <Text color="slate.500">• {candidates.length} Candidates</Text>
+                        <Button size="xs" variant="outline" leftIcon={<Icon as={BookOpen} />} onClick={() => setIsJobDetailsOpen(true)}>
+                            View Job Details
+                        </Button>
                     </HStack>
                 </Box>
                 {compareSelection.length === 2 && (
@@ -128,6 +183,7 @@ const JobDetail = () => {
                             <Th isNumeric>Match Score</Th>
                             <Th>Status</Th>
                             <Th>Action</Th>
+                            <Th w="50px"></Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -150,15 +206,56 @@ const JobDetail = () => {
                                 </Td>
                                 <Td><Badge variant="outline">New</Badge></Td>
                                 <Td>
-                                    <Button size="sm" variant="ghost" colorScheme="brand" onClick={() => handleViewCandidate(c)}>
-                                        Analyze
-                                    </Button>
+                                    <HStack spacing={1}>
+                                        <IconButton
+                                            icon={<Icon as={FileText} />}
+                                            size="sm"
+                                            variant="ghost"
+                                            colorScheme="blue"
+                                            aria-label="View Resume"
+                                            onClick={() => handleViewResume(c)}
+                                        />
+                                        <Button size="sm" variant="ghost" colorScheme="brand" onClick={() => handleViewCandidate(c)}>
+                                            Analyze
+                                        </Button>
+                                    </HStack>
+                                </Td>
+                                <Td>
+                                    <IconButton
+                                        icon={<Icon as={Trash2} />}
+                                        size="sm"
+                                        variant="ghost"
+                                        colorScheme="red"
+                                        aria-label="Delete applicant"
+                                        onClick={() => confirmDelete(c.id)}
+                                    />
                                 </Td>
                             </Tr>
                         ))}
                     </Tbody>
                 </Table>
             </Card>
+
+            {/* Job Details Modal */}
+            <Modal isOpen={isJobDetailsOpen} onClose={() => setIsJobDetailsOpen(false)} size="xl">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Job Details</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <Stack spacing={4}>
+                            <Box>
+                                <Heading size="sm" mb={2} color="slate.700">Description</Heading>
+                                <Text color="slate.600" whiteSpace="pre-wrap">{job.description}</Text>
+                            </Box>
+                            <Box>
+                                <Heading size="sm" mb={2} color="slate.700">Requirements</Heading>
+                                <Text color="slate.600" whiteSpace="pre-wrap">{job.requirements}</Text>
+                            </Box>
+                        </Stack>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
 
             {/* Deep Dive Drawer */}
             <Drawer isOpen={isDrawerOpen} placement="right" onClose={onDrawerClose} size="xl">
@@ -171,6 +268,7 @@ const JobDetail = () => {
                             <Tabs isFitted variant="enclosed">
                                 <TabList mb="1em" borderBottomWidth="1px" borderColor="slate.200" bg="slate.50" pt={2} px={2}>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Overview</Tab>
+                                    <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Decision Details</Tab>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Evidence</Tab>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Neural Logs</Tab>
                                 </TabList>
@@ -199,6 +297,11 @@ const JobDetail = () => {
                                                             <Icon as={selectedCandidate.audit.flagged ? AlertCircle : CheckCircle2} color={selectedCandidate.audit.flagged ? "red.500" : "green.500"} />
                                                             <Text fontWeight="bold">{selectedCandidate.audit.flagged ? "Flagged" : "Clean"}</Text>
                                                         </HStack>
+                                                        {selectedCandidate.audit.flagged && (
+                                                            <Button size="xs" mt={2} colorScheme="red" variant="outline" onClick={onAuditOpen}>
+                                                                View Details
+                                                            </Button>
+                                                        )}
                                                     </CardBody>
                                                 </Card>
                                             </SimpleGrid>
@@ -216,7 +319,118 @@ const JobDetail = () => {
                                         </Stack>
                                     </TabPanel>
 
-                                    {/* 2. EVIDENCE PANEL */}
+                                    {/* 2. DECISION DETAILS PANEL */}
+                                    <TabPanel>
+                                        <Stack spacing={6} p={4}>
+                                            <Box>
+                                                <Heading size="md" mb={2}>10-Criteria Evaluation</Heading>
+                                                <Text color="slate.500">Detailed breakdown of how this candidate was scored on each dimension.</Text>
+                                            </Box>
+
+                                            {selectedCandidate.match?.criteria_scores && Object.entries(selectedCandidate.match.criteria_scores).map(([key, criterion]) => {
+                                                const score = criterion.score || criterion.potential_score || 0
+                                                const level = criterion.level || criterion.potential_level || 'Low'
+                                                const levelColor = level === 'High' ? 'green' : level === 'Medium' ? 'yellow' : 'red'
+
+                                                return (
+                                                    <Card key={key} variant="outline" borderLeftWidth="4px" borderLeftColor={`${levelColor}.400`}>
+                                                        <CardBody>
+                                                            <HStack justify="space-between" mb={3}>
+                                                                <Heading size="sm" textTransform="capitalize">
+                                                                    {key.replace(/_/g, ' ')}
+                                                                </Heading>
+                                                                <HStack>
+                                                                    <Badge colorScheme={levelColor}>{level}</Badge>
+                                                                    <Text fontWeight="bold" fontSize="lg" color={`${levelColor}.600`}>
+                                                                        {score}/10
+                                                                    </Text>
+                                                                </HStack>
+                                                            </HStack>
+
+                                                            <Progress
+                                                                value={score * 10}
+                                                                colorScheme={levelColor}
+                                                                size="sm"
+                                                                borderRadius="full"
+                                                                mb={3}
+                                                            />
+
+                                                            {criterion.evidence && (
+                                                                <Box mb={3} p={3} bg="slate.50" borderRadius="md">
+                                                                    <Text fontSize="xs" fontWeight="bold" color="slate.500" mb={1}>EVIDENCE</Text>
+                                                                    <Text fontSize="sm" color="slate.700">{criterion.evidence}</Text>
+                                                                </Box>
+                                                            )}
+
+                                                            {criterion.justification && (
+                                                                <Box mb={3}>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="slate.500" mb={1}>JUSTIFICATION</Text>
+                                                                    <Text fontSize="sm" color="slate.600">{criterion.justification}</Text>
+                                                                </Box>
+                                                            )}
+
+                                                            {/* Skills lists for specific criteria */}
+                                                            {criterion.technical_skills_matched?.length > 0 && (
+                                                                <HStack wrap="wrap" spacing={2} mb={2}>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="green.600">✓ Technical:</Text>
+                                                                    {criterion.technical_skills_matched.map((skill, i) => (
+                                                                        <Badge key={i} colorScheme="green" variant="subtle" size="sm">{skill}</Badge>
+                                                                    ))}
+                                                                </HStack>
+                                                            )}
+
+                                                            {criterion.soft_skills_matched?.length > 0 && (
+                                                                <HStack wrap="wrap" spacing={2} mb={2}>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="blue.600">✓ Soft Skills:</Text>
+                                                                    {criterion.soft_skills_matched.map((skill, i) => (
+                                                                        <Badge key={i} colorScheme="blue" variant="subtle" size="sm">{skill}</Badge>
+                                                                    ))}
+                                                                </HStack>
+                                                            )}
+
+                                                            {criterion.required_gaps?.length > 0 && (
+                                                                <HStack wrap="wrap" spacing={2} mb={2}>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="red.600">✗ Required Gaps:</Text>
+                                                                    {criterion.required_gaps.map((gap, i) => (
+                                                                        <Badge key={i} colorScheme="red" variant="subtle" size="sm">{gap}</Badge>
+                                                                    ))}
+                                                                </HStack>
+                                                            )}
+
+                                                            {criterion.skills_identified?.length > 0 && (
+                                                                <HStack wrap="wrap" spacing={2} mb={2}>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="purple.600">Trainable:</Text>
+                                                                    {criterion.skills_identified.map((skill, i) => (
+                                                                        <Badge key={i} colorScheme="purple" variant="subtle" size="sm">{skill}</Badge>
+                                                                    ))}
+                                                                </HStack>
+                                                            )}
+
+                                                            {/* Special display for potential/readiness */}
+                                                            {key === 'potential_readiness' && (
+                                                                <SimpleGrid columns={2} spacing={4} mt={3}>
+                                                                    <Box p={3} bg="purple.50" borderRadius="md" textAlign="center">
+                                                                        <Text fontSize="xs" fontWeight="bold" color="purple.600">POTENTIAL</Text>
+                                                                        <Text fontSize="xl" fontWeight="bold" color="purple.700">{criterion.potential_score}/10</Text>
+                                                                    </Box>
+                                                                    <Box p={3} bg="green.50" borderRadius="md" textAlign="center">
+                                                                        <Text fontSize="xs" fontWeight="bold" color="green.600">READINESS</Text>
+                                                                        <Text fontSize="xl" fontWeight="bold" color="green.700">{criterion.readiness_score}/10</Text>
+                                                                    </Box>
+                                                                </SimpleGrid>
+                                                            )}
+                                                        </CardBody>
+                                                    </Card>
+                                                )
+                                            })}
+
+                                            {!selectedCandidate.match?.criteria_scores && (
+                                                <Text color="slate.400">No detailed criteria scores available.</Text>
+                                            )}
+                                        </Stack>
+                                    </TabPanel>
+
+                                    {/* 3. EVIDENCE PANEL */}
                                     <TabPanel>
                                         <Stack spacing={6} p={4}>
                                             <Heading size="md">Evidence & Citations</Heading>
@@ -364,6 +578,122 @@ const JobDetail = () => {
                     </ModalBody>
                 </ModalContent>
             </Modal>
+
+            {/* Resume Text Modal */}
+            <Modal isOpen={isResumeOpen} onClose={onResumeClose} size="xl" scrollBehavior="inside">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Original Resume</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        <Box p={4} bg="slate.50" borderRadius="md" borderWidth="1px" borderColor="slate.200">
+                            <Text whiteSpace="pre-wrap" fontSize="sm" fontFamily="mono" color="slate.700">
+                                {resumeText}
+                            </Text>
+                        </Box>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+            {/* Audit Details Modal */}
+            <Modal isOpen={isAuditOpen} onClose={onAuditClose} size="lg">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Bias Audit Details</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        {selectedCandidate && (
+                            <Stack spacing={4}>
+                                <SimpleGrid columns={2} spacing={4}>
+                                    <Card bg="red.50" variant="outline" borderColor="red.200">
+                                        <CardBody p={4} textAlign="center">
+                                            <Text fontSize="xs" color="red.600" textTransform="uppercase" fontWeight="bold">Status</Text>
+                                            <HStack justify="center" mt={2}>
+                                                <Icon as={AlertCircle} color="red.500" />
+                                                <Text fontWeight="bold" color="red.700">Flagged</Text>
+                                            </HStack>
+                                        </CardBody>
+                                    </Card>
+                                    <Card variant="outline">
+                                        <CardBody p={4} textAlign="center">
+                                            <Text fontSize="xs" color="slate.500" textTransform="uppercase" fontWeight="bold">Fairness Score</Text>
+                                            <Heading size="lg" mt={2} color="slate.700">{selectedCandidate.audit.fairness_score}%</Heading>
+                                        </CardBody>
+                                    </Card>
+                                </SimpleGrid>
+
+                                <Box>
+                                    <Heading size="sm" mb={3} color="red.700">Detected Flags</Heading>
+                                    {selectedCandidate.audit.flags && selectedCandidate.audit.flags.length > 0 ? (
+                                        <Stack spacing={2}>
+                                            {selectedCandidate.audit.flags.map((flag, idx) => (
+                                                <Card key={idx} variant="outline" borderLeftWidth="4px" borderLeftColor="red.400">
+                                                    <CardBody py={2} px={4}>
+                                                        <HStack>
+                                                            <Icon as={AlertCircle} color="red.500" boxSize={4} />
+                                                            <Text fontSize="sm" color="slate.700">{flag}</Text>
+                                                        </HStack>
+                                                    </CardBody>
+                                                </Card>
+                                            ))}
+                                        </Stack>
+                                    ) : (
+                                        <Text color="slate.500" fontSize="sm">No specific flags provided.</Text>
+                                    )}
+                                </Box>
+
+                                {selectedCandidate.audit.audit_note && (
+                                    <Box>
+                                        <Heading size="sm" mb={2} color="slate.700">Auditor Note</Heading>
+                                        <Box p={3} bg="slate.50" borderRadius="md" borderWidth="1px" borderColor="slate.200">
+                                            <Text fontSize="sm" color="slate.600" whiteSpace="pre-wrap">
+                                                {selectedCandidate.audit.audit_note}
+                                            </Text>
+                                        </Box>
+                                    </Box>
+                                )}
+
+                                <Box p={3} bg="yellow.50" borderRadius="md" borderWidth="1px" borderColor="yellow.200">
+                                    <HStack spacing={2}>
+                                        <Icon as={AlertCircle} color="yellow.600" />
+                                        <Text fontSize="xs" color="yellow.800" fontWeight="semibold">
+                                            This decision has been flagged for human review due to potential bias indicators.
+                                        </Text>
+                                    </HStack>
+                                </Box>
+                            </Stack>
+                        )}
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog
+                isOpen={isDeleteOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onDeleteClose}
+            >
+                <AlertDialogOverlay>
+                    <AlertDialogContent>
+                        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                            Delete Applicant
+                        </AlertDialogHeader>
+
+                        <AlertDialogBody>
+                            Are you sure you want to delete this applicant? This action cannot be undone.
+                        </AlertDialogBody>
+
+                        <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onDeleteClose}>
+                                Cancel
+                            </Button>
+                            <Button colorScheme="red" onClick={handleDelete} ml={3} isLoading={isDeleting}>
+                                Delete
+                            </Button>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialogOverlay>
+            </AlertDialog>
         </Stack>
     )
 }

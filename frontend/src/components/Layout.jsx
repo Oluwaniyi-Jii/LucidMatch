@@ -53,7 +53,7 @@ const Layout = ({ children }) => {
             >
                 <Flex align="center" px="8" mb="10">
                     <Text fontSize="2xl" fontWeight="bold" color="brand.600" letterSpacing="tight">
-                        LucidMatch
+                        Prism
                     </Text>
                 </Flex>
 

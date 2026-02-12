@@ -1,0 +1,147 @@
+{
+    "profiles": [
+        {
+            "id": "pivot-nurse-to-ux",
+            "name": "The Pivot",
+            "description": "Healthcare professional transitioning to UX Research",
+            "resume_text": "PROFESSIONAL SUMMARY\nDedicated Registered Nurse with 5 years of experience in high-pressure acute care settings. Passionate about understanding patient needs, advocating for better care experiences, and translating complex medical information into understandable guidance. Seeking to transition into UX Research where I can apply my deep expertise in empathy, observation, and human-centered problem solving.\n\nEXPERIENCE\n\nSenior Registered Nurse | Memorial General Hospital | 2020-2025\n- Conducted daily patient assessments and interviews to understand needs, pain points, and concerns\n- Developed and implemented patient education materials that improved comprehension scores by 40%\n- Led cross-functional team meetings with doctors, therapists, and social workers to coordinate holistic care plans\n- Documented detailed patient observations and behavioral patterns in electronic health records\n- Mentored 12 junior nurses on patient communication techniques and empathetic care delivery\n- Received 'Excellence in Patient Advocacy' award three consecutive years\n\nRegistered Nurse | City Medical Center | 2018-2020\n- Managed care for 8-12 patients per shift in high-acuity cardiac unit\n- Conducted intake interviews and needs assessments for new admissions\n- Created simplified discharge instructions that reduced readmission rates by 15%\n- Collaborated with patient experience team to improve satisfaction scores\n\nEDUCATION\nBachelor of Science in Nursing | State University | 2018\n- Graduated Magna Cum Laude\n- Coursework included: Health Psychology, Patient Communication, Research Methods\n\nSKILLS\n- Patient interviewing and needs assessment\n- Empathetic listening and observation\n- Cross-functional team collaboration\n- Documentation and pattern recognition\n- Presentation and education delivery\n- Crisis management and decision-making under pressure\n- Electronic health record systems\n\nCERTIFICATIONS\n- Registered Nurse (RN) License\n- Basic Life Support (BLS)\n- Advanced Cardiovascular Life Support (ACLS)\n- Google UX Design Certificate (In Progress)\n\nPROFESSIONAL DEVELOPMENT\n- Completed Nielsen Norman Group UX Research Fundamentals course\n- Attending local UX meetups and healthcare design conferences\n- Personal project: Redesigned hospital wayfinding signage based on patient observation study",
+            "target_role": "UX Researcher",
+            "expected_outcome": {
+                "match_level": "Medium-High",
+                "expected_score_range": [
+                    65,
+                    78
+                ],
+                "key_transfers": [
+                    "Patient interviewing → User interviews",
+                    "Needs assessment → User research",
+                    "Patient advocacy → User advocacy",
+                    "Documentation → Research synthesis"
+                ],
+                "expected_gaps": [
+                    "Formal UX research methodology",
+                    "Usability testing tools",
+                    "UX portfolio/case studies"
+                ]
+            }
+        },
+        {
+            "id": "underdog-bootcamp-grad",
+            "name": "The Underdog",
+            "description": "Bootcamp graduate with no CS degree applying for backend engineer",
+            "resume_text": "PROFESSIONAL SUMMARY\nSelf-taught software developer with proven ability to learn complex technical concepts independently. Completed intensive 6-month full-stack bootcamp while working full-time. Built and deployed multiple production applications demonstrating strong problem-solving skills and dedication to craft. Seeking backend engineer role where I can contribute immediately while continuing to grow.\n\nTECHNICAL PROJECTS\n\nTaskFlow API | Personal Project | 2024\n- Built RESTful API using Node.js and Express serving 500+ daily active users\n- Implemented JWT authentication and role-based access control\n- Designed PostgreSQL database schema with 12 tables and optimized queries\n- Deployed to AWS EC2 with Docker, achieving 99.5% uptime\n- GitHub: 200+ stars, featured in 'Awesome Node.js' list\n\nInventory Management System | Freelance | 2024\n- Developed full-stack application for local retail business\n- Python/Flask backend with SQLite, migrated to PostgreSQL for production\n- Reduced manual inventory tracking time by 8 hours per week\n- Implemented real-time stock alerts saving client $15,000 in lost sales\n\nOpen Source Contributions | 2023-2024\n- Contributed 15 merged pull requests to popular open-source projects\n- Fixed critical bug in Express.js middleware affecting 50,000+ users\n- Added new feature to popular ORM library\n\nEXPERIENCE\n\nFreelance Software Developer | Self-Employed | 2024-Present\n- Completed 8 client projects with 100% satisfaction rating\n- Built custom APIs, automated data pipelines, and internal tools\n- Average project value: $3,500\n\nRetail Store Manager | ValueMart | 2019-2024\n- Managed team of 15 employees and $2M annual budget\n- Implemented inventory tracking spreadsheet automation (precursor to coding interest)\n- Consistently exceeded sales targets by 15-20%\n\nEDUCATION\n\nFull-Stack Web Development Certificate | CodeCamp Academy | 2024\n- 1000+ hours of hands-on coding instruction\n- Technologies: JavaScript, Python, Node.js, React, PostgreSQL, Docker\n- Capstone project: Full-stack e-commerce platform\n\nHigh School Diploma | Central High School | 2015\n\nTECHNICAL SKILLS\nLanguages: JavaScript, Python, SQL, TypeScript\nBackend: Node.js, Express, Flask, FastAPI\nDatabases: PostgreSQL, MongoDB, Redis\nDevOps: Docker, AWS (EC2, S3, RDS), GitHub Actions\nTools: Git, VS Code, Postman, Linux\n\nSOFT SKILLS\n- Self-directed learning (taught myself coding in 6 months)\n- Problem decomposition and debugging\n- Client communication and requirements gathering\n- Time management (balanced bootcamp with full-time job)",
+            "target_role": "Backend Engineer",
+            "expected_outcome": {
+                "match_level": "Medium",
+                "expected_score_range": [
+                    60,
+                    72
+                ],
+                "key_transfers": [
+                    "Self-teaching → Continuous learning ability",
+                    "Freelance projects → Production experience",
+                    "Open source → Collaborative development"
+                ],
+                "expected_gaps": [
+                    "CS fundamentals (algorithms, data structures)",
+                    "System design experience",
+                    "Large codebase experience"
+                ]
+            }
+        },
+        {
+            "id": "global-international-engineer",
+            "name": "The Global",
+            "description": "International engineer with non-US job titles",
+            "resume_text": "PROFESSIONAL SUMMARY\nSenior technology professional with 8 years of experience leading software development teams across Europe and Asia. Expert in cloud architecture, distributed systems, and agile methodologies. Fluent in English, Mandarin, and German. Seeking Principal Engineer role in the United States.\n\nEXPERIENCE\n\nLead Technical Consultant | TechGlobal GmbH, Munich | 2021-2025\n- Architected microservices platform handling 50M daily transactions for Fortune 500 client\n- Led distributed team of 12 engineers across 4 time zones\n- Reduced infrastructure costs by 40% through Kubernetes optimization\n- Established coding standards and CI/CD practices adopted company-wide\n- Delivered technical presentations at 5 international conferences\n\nSenior Software Entwickler | InnoSoft AG, Berlin | 2018-2021\n- Developed high-performance trading system processing 100,000 transactions/second\n- Implemented event-driven architecture using Kafka and Elasticsearch\n- Mentored 6 junior developers, 4 promoted within 2 years\n- Received company innovation award for latency optimization project\n\n軟體工程師 (Software Engineer) | Taipei Tech Solutions | 2016-2018\n- Built customer-facing applications serving 2M users in Taiwan market\n- Migrated legacy monolith to cloud-native microservices\n- Collaborated with product team on user experience improvements\n\nEDUCATION\n\nMaster of Science in Computer Science | Technical University of Munich | 2016\n- Thesis: Distributed Consensus Algorithms for High-Availability Systems\n- Graduated with Distinction\n\nBachelor of Engineering | National Taiwan University | 2014\n- Major: Computer Science and Information Engineering\n- Dean's List all semesters\n\nTECHNICAL SKILLS\nLanguages: Java, Python, Go, Scala, TypeScript\nCloud: AWS (Solutions Architect Certified), GCP, Azure\nArchitecture: Microservices, Event-Driven, Domain-Driven Design\nData: Kafka, Elasticsearch, PostgreSQL, Redis, Cassandra\nDevOps: Kubernetes, Terraform, GitLab CI, Prometheus\n\nCERTIFICATIONS\n- AWS Solutions Architect Professional\n- Certified Kubernetes Administrator (CKA)\n- Professional Scrum Master I\n\nLANGUAGES\n- English: Fluent (IELTS 8.5)\n- German: Professional working proficiency\n- Mandarin Chinese: Native",
+            "target_role": "Principal Engineer",
+            "expected_outcome": {
+                "match_level": "High",
+                "expected_score_range": [
+                    82,
+                    92
+                ],
+                "key_transfers": [
+                    "Lead Technical Consultant ≈ Staff/Principal level",
+                    "International team leadership → Cross-functional collaboration",
+                    "Global project delivery → Enterprise architecture"
+                ],
+                "expected_gaps": [
+                    "US market context (minor)",
+                    "Specific company tech stack alignment"
+                ]
+            }
+        },
+        {
+            "id": "overqualified-phd",
+            "name": "The Overqualified",
+            "description": "PhD physicist applying for entry-level data analyst role",
+            "resume_text": "PROFESSIONAL SUMMARY\nPhD physicist with 6 years of research experience in computational modeling and data analysis. Published author with expertise in statistical analysis, machine learning, and Python programming. Transitioning from academia to industry, seeking data analyst role where I can apply quantitative skills to business problems.\n\nEDUCATION\n\nDoctor of Philosophy in Physics | MIT | 2023\n- Dissertation: Machine Learning Applications in Particle Physics Detection\n- Analyzed datasets with billions of records using distributed computing\n- Published 8 peer-reviewed papers, 500+ citations\n- Teaching assistant for undergraduate statistics (3 years)\n\nMaster of Science in Physics | MIT | 2019\n- Focus: Computational Physics and Data Analysis\n\nBachelor of Science in Physics | UC Berkeley | 2017\n- Graduated Summa Cum Laude, Phi Beta Kappa\n- Minor in Applied Mathematics\n\nRESEARCH EXPERIENCE\n\nPostdoctoral Research Associate | CERN | 2023-2025\n- Developed novel machine learning algorithms for anomaly detection\n- Processed petabyte-scale datasets using Apache Spark\n- Collaborated with international team of 200+ scientists\n- Presented findings at 12 international conferences\n\nGraduate Research Assistant | MIT | 2017-2023\n- Built statistical models for particle collision analysis\n- Created data visualization dashboards for research team\n- Automated data pipeline reducing processing time by 60%\n- Mentored 5 undergraduate research assistants\n\nTECHNICAL SKILLS\nProgramming: Python (NumPy, Pandas, Scikit-learn, TensorFlow), R, SQL, C++\nData Tools: Jupyter, Spark, Tableau, Matplotlib, ROOT\nStatistics: Hypothesis testing, regression, Bayesian inference, Monte Carlo\nMachine Learning: Classification, clustering, neural networks, NLP basics\nComputing: Linux, HPC clusters, Git, Docker\n\nPUBLICATIONS\n- 8 peer-reviewed papers in Nature Physics, Physical Review Letters\n- 3 conference proceedings\n- 500+ total citations, h-index: 12\n\nADDITIONAL\n- Reviewed grant proposals for National Science Foundation\n- Volunteer data science tutor for underrepresented students",
+            "target_role": "Entry-Level Data Analyst",
+            "expected_outcome": {
+                "match_level": "High (Overqualified)",
+                "expected_score_range": [
+                    85,
+                    95
+                ],
+                "key_transfers": [
+                    "PhD-level statistics → Data analysis (exceeds requirements)",
+                    "Research experience → Analytical thinking",
+                    "Python/SQL → Technical requirements"
+                ],
+                "expected_gaps": [],
+                "special_notes": "System should flag as overqualified and suggest Senior Data Scientist or ML Engineer paths"
+            }
+        },
+        {
+            "id": "sparse-minimal-resume",
+            "name": "The Sparse",
+            "description": "Minimal resume with limited information",
+            "resume_text": "John Smith\nEmail: john.smith@email.com\nPhone: 555-123-4567\n\nOBJECTIVE\nSeeking marketing position\n\nEXPERIENCE\nMarketing Coordinator, ABC Company, 2022-2024\n- Social media management\n- Email campaigns\n- Event planning\n\nSales Associate, Retail Store, 2020-2022\n- Customer service\n- Cash register\n\nEDUCATION\nBA Communications, State College, 2020\n\nSKILLS\n- Microsoft Office\n- Social media\n- Communication",
+            "target_role": "Marketing Manager",
+            "expected_outcome": {
+                "match_level": "Low",
+                "expected_score_range": [
+                    30,
+                    45
+                ],
+                "key_transfers": [
+                    "Marketing Coordinator → Some relevant experience"
+                ],
+                "expected_gaps": [
+                    "Insufficient experience for manager role",
+                    "No quantified achievements",
+                    "Limited skill detail",
+                    "No leadership experience shown"
+                ],
+                "special_notes": "System should handle ambiguity gracefully and assign lower confidence scores"
+            }
+        },
+        {
+            "id": "keyword-stuffer",
+            "name": "The Keyword Stuffer",
+            "description": "Resume with all the right buzzwords but no real substance",
+            "resume_text": "SENIOR FULL-STACK ENGINEER\n\nPROFESSIONAL SUMMARY\nHighly motivated and passionate full-stack developer with expertise in React, Node.js, Python, AWS, Docker, Kubernetes, microservices, CI/CD, agile methodologies, and machine learning. Strong communicator with excellent problem-solving skills and ability to work in fast-paced environments. Seeking challenging opportunity to leverage my technical skills.\n\nTECHNICAL SKILLS\n- Languages: JavaScript, TypeScript, Python, Java, Go, Rust, C++, Ruby, PHP, Scala\n- Frontend: React, Vue, Angular, Next.js, Redux, GraphQL, Tailwind CSS\n- Backend: Node.js, Express, Django, FastAPI, Spring Boot, Rails\n- Cloud: AWS, GCP, Azure, Terraform, CloudFormation\n- DevOps: Docker, Kubernetes, Jenkins, GitHub Actions, ArgoCD\n- Databases: PostgreSQL, MongoDB, Redis, Elasticsearch, Cassandra, DynamoDB\n- AI/ML: TensorFlow, PyTorch, scikit-learn, Pandas, NumPy\n\nEXPERIENCE\n\nFreelance Developer | Self-Employed | 2023-2024\n- Worked on various web development projects\n- Built websites using modern technologies\n- Collaborated with clients on requirements\n\nIT Support Technician | Local Computer Shop | 2021-2023\n- Fixed computers and installed software\n- Helped customers with technical issues\n- Set up networks and troubleshot problems\n\nIntern | University IT Department | Summer 2021\n- Assisted with help desk tickets\n- Updated department website\n- Attended team meetings\n\nEDUCATION\nBachelor of Arts, General Studies | Community College Online | 2023\n- Completed various courses in different subjects\n\nCERTIFICATIONS\n- LinkedIn Learning: Introduction to JavaScript (2 hours)\n- Udemy: Complete Web Developer Bootcamp (Started)\n- freeCodeCamp: Responsive Web Design (In Progress)\n\nPROJECTS\n- Personal Portfolio Website: Built a website to showcase my skills\n- Todo App: Created a todo list application\n- Calculator: Made a calculator using JavaScript",
+            "target_role": "Senior Full-Stack Engineer",
+            "expected_outcome": {
+                "match_level": "Low",
+                "expected_score_range": [
+                    25,
+                    40
+                ],
+                "key_transfers": [
+                    "Some web development exposure"
+                ],
+                "expected_gaps": [
+                    "No production-scale experience despite listing advanced technologies",
+                    "Experience doesn't match claimed skills (IT Support vs Senior Engineer)",
+                    "No quantified achievements or business impact",
+                    "Projects are trivial (todo app, calculator) despite listing ML/AI skills",
+                    "Education doesn't match role seniority",
+                    "Certifications are introductory or incomplete"
+                ],
+                "special_notes": "System should detect mismatch between buzzword-heavy skills section and actual experience. The resume lists every technology but provides no evidence of using them at depth."
+            }
+        }
+    ]
+}

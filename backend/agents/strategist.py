@@ -18,18 +18,30 @@ class StrategistAgent:
         {json.dumps(skill_gaps)}
         
         TASK:
-        1. For each gap, suggest a learning resource (Course, Article, Project).
-        2. Differentiate between "Quick Wins" (1-2 weeks) and "Deep Dives" (1-2 months).
-        3. Ensure resources are real or realistic types (e.g., "Coursera: Advanced SQL").
+        1. For each gap, suggest a REAL learning resource with an actual URL.
+        2. Prioritize well-known platforms: Coursera, Udemy, LinkedIn Learning, YouTube, freeCodeCamp, Codecademy, edX, Pluralsight.
+        3. Differentiate between "Quick Win" (1-2 weeks) and "Deep Dive" (1-2 months).
+        4. For each resource, provide a direct URL to the course/tutorial/article.
+        5. If you're unsure of the exact URL, provide the most likely search URL on that platform.
+        
+        PLATFORM URL PATTERNS TO USE:
+        - Coursera: https://www.coursera.org/search?query=[skill]
+        - Udemy: https://www.udemy.com/courses/search/?q=[skill]
+        - YouTube: https://www.youtube.com/results?search_query=[skill]+tutorial
+        - freeCodeCamp: https://www.freecodecamp.org/learn/
+        - LinkedIn Learning: https://www.linkedin.com/learning/search?keywords=[skill]
+        - Codecademy: https://www.codecademy.com/search?query=[skill]
         
         OUTPUT FORMAT (JSON):
         {{
             "curriculum": [
                 {{
                     "skill": "Gap Name",
-                    "resource": "Course Name/Platform",
-                    "type": "Quick Win/Deep Dive",
-                    "estimated_time": "X weeks"
+                    "resource": "Course/Tutorial Name",
+                    "type": "Quick Win or Deep Dive",
+                    "estimated_time": "X weeks",
+                    "platform": "Platform Name",
+                    "url": "https://actual-url-to-resource"
                 }}
             ],
             "estimated_total_time": "X months"

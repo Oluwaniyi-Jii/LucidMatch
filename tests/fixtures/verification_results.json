@@ -1,0 +1,161 @@
+[
+  {
+    "profile_id": "pivot-nurse-to-ux",
+    "profile_name": "The Pivot",
+    "target_role": "UX Researcher",
+    "job_id": "ux-researcher",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Mid"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 78,
+        "fit_level": "Medium",
+        "recommendation": "Hire"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 5
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 78
+  },
+  {
+    "profile_id": "underdog-bootcamp-grad",
+    "profile_name": "The Underdog",
+    "target_role": "Backend Engineer",
+    "job_id": "backend-engineer",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Junior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 53,
+        "fit_level": "Medium",
+        "recommendation": "Maybe"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 10
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 53
+  },
+  {
+    "profile_id": "global-international-engineer",
+    "profile_name": "The Global",
+    "target_role": "Principal Engineer",
+    "job_id": "principal-engineer",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Senior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 74,
+        "fit_level": "Medium",
+        "recommendation": "Hire"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 6
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 74
+  },
+  {
+    "profile_id": "overqualified-phd",
+    "profile_name": "The Overqualified",
+    "target_role": "Entry-Level Data Analyst",
+    "job_id": "data-analyst-entry",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Mid"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 52,
+        "fit_level": "Medium",
+        "recommendation": "Pass"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": true,
+        "fairness_score": 65,
+        "flags": [
+          "Elite university bias: Multiple references to MIT and UC Berkeley used as positive scoring factors",
+          "Socioeconomic bias: PhD from MIT and research at CERN may reflect privileged access to elite education",
+          "Potential indirect age bias: 8 years of experience and PhD completion timeline suggests mid-career professional being evaluated for entry-level role"
+        ]
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 6
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 52
+  },
+  {
+    "profile_id": "sparse-minimal-resume",
+    "profile_name": "The Sparse",
+    "target_role": "Marketing Manager",
+    "job_id": "marketing-manager",
+    "pipeline_stages": {
+      "parser": {
+        "status": "success",
+        "skills_extracted": 0,
+        "experience_level": "Junior"
+      },
+      "reasoner": {
+        "status": "success",
+        "match_score": 38,
+        "fit_level": "Low",
+        "recommendation": "Pass"
+      },
+      "auditor": {
+        "status": "success",
+        "flagged": false,
+        "fairness_score": 92,
+        "flags": []
+      },
+      "strategist": {
+        "status": "success",
+        "resources_generated": 8
+      }
+    },
+    "overall_status": "SUCCESS",
+    "final_score": 38
+  }
+]

@@ -109,6 +109,35 @@ GENERAL RULES:
 - Assign score 1-10 for each criterion based only on available evidence
 - If evidence is limited or unclear, assign lower score rather than guessing
 
+KEYWORD STUFFING DETECTION (CRITICAL):
+When evaluating Skills Match, Core Competency, and Quality of Experience, apply these rules:
+
+1. SKILLS MUST HAVE EVIDENCE: A skill listed in a "Skills" section is worth NOTHING without supporting evidence in Experience or Projects
+   - Example: Listing "Kubernetes" but only showing IT Support experience = 0 credit for Kubernetes
+   - Example: Listing "Machine Learning" but only building a calculator = 0 credit for ML
+
+2. MISMATCH PENALTY: If the number of claimed technologies (10+) vastly exceeds demonstrated projects (1-3 simple ones), apply severe penalty
+   - This is a RED FLAG indicating resume padding
+   - Score Skills Match as LOW (1-3) regardless of keyword presence
+
+3. EXPERIENCE-SKILL GAP: Compare claimed seniority to actual experience
+   - Claiming "Senior" skills with only IT Support/Help Desk background = LOW score
+   - Freelance "various projects" without specifics = unverifiable = LOW score
+
+4. PROJECT QUALITY CHECK:
+   - "Todo App", "Calculator", "Portfolio Website" are BEGINNER projects
+   - These do NOT demonstrate advanced skills like microservices, ML, or distributed systems
+   - Penalize heavily if advanced skills are claimed but only beginner projects shown
+
+5. CERTIFICATION QUALITY:
+   - "Started", "In Progress", "2-hour course" = NOT meaningful credentials
+   - Only completed, recognized certifications count as evidence
+
+6. QUANTIFICATION CHECK:
+   - Vague claims like "worked on projects" or "helped customers" = LOW evidence
+   - Specific metrics like "reduced latency by 40%" or "managed team of 12" = HIGH evidence
+   - Absence of ANY quantified achievements in a senior-level application = RED FLAG
+
 OUTPUT FORMAT (JSON ONLY):
 {{
   "overall_evaluation": {{
@@ -207,8 +236,20 @@ OUTPUT FORMAT (JSON ONLY):
     {{"subject": "Interpersonal", "score": 0, "fullMark": 10}},
     {{"subject": "Learning Ability", "score": 0, "fullMark": 10}},
     {{"subject": "Trainability", "score": 0, "fullMark": 10}},
+  "radar_chart_data": [
+    {{"subject": "Education", "score": 0, "fullMark": 10}},
+    {{"subject": "Experience", "score": 0, "fullMark": 10}},
+    {{"subject": "Skills Match", "score": 0, "fullMark": 10}},
+    {{"subject": "Transferability", "score": 0, "fullMark": 10}},
+    {{"subject": "Core Competency", "score": 0, "fullMark": 10}},
+    {{"subject": "Interpersonal", "score": 0, "fullMark": 10}},
+    {{"subject": "Learning Ability", "score": 0, "fullMark": 10}},
+    {{"subject": "Trainability", "score": 0, "fullMark": 10}},
     {{"subject": "Potential", "score": 0, "fullMark": 10}},
     {{"subject": "Readiness", "score": 0, "fullMark": 10}}
+  ],
+  "evidence": [
+    {{"requirement": "Key Requirement from Job", "quote": "Exact quote from resume supporting match", "score": 0-100}}
   ]
 }}
 
@@ -230,6 +271,10 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no explanations, just the JSON o
             json_str = content[start:end]
             
             result = json.loads(json_str)
+            
+            # Ensure output has evidence array even if model misses it
+            if "evidence" not in result:
+                result["evidence"] = []
             
             # Ensure backward compatibility with old format
             result['match_score'] = result['overall_evaluation']['total_score']

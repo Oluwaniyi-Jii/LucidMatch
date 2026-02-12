@@ -505,3 +505,59 @@ Located in `tests/fixtures/profiles.json` - 5 edge-case personas for validation.
 - First call is slower (LLM warm-up)
 - Check API rate limits with your LLM provider
 - Consider caching for identical resumes
+
+---
+
+## Security & Privacy
+
+LucidMatch is designed with security and privacy as core architectural principles.
+
+### IT Security Measures
+
+| Layer | Protection |
+|-------|------------|
+| **Data at Rest** | AES-256 encryption for all stored data |
+| **Data in Transit** | TLS 1.3 for all API communications |
+| **Authentication** | JWT tokens with secure session management |
+| **API Security** | Rate limiting, input validation, CORS policies |
+| **Infrastructure** | Isolated containers, no persistent processing storage |
+
+### AI-Specific Risk Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| **Bias in recommendations** | Auditor Agent performs real-time bias checks with fairness scoring |
+| **Unexplainable decisions** | Full reasoning trace and evidence citations for every recommendation |
+| **Data leakage to AI** | PII stripped before any data reaches AI providers |
+| **Model hallucination** | Structured output schema enforcement, resource verification |
+| **Prompt injection** | Input sanitization, role-based prompt templates |
+
+### Privacy Safeguards
+
+- **PII Stripping**: Names, emails, phones, addresses removed before AI evaluation
+- **Anonymized Processing**: AI agents only see anonymized candidate profiles
+- **Data Minimization**: Only job-relevant information extracted
+- **Retention Limits**: Configurable data retention policies
+- **Candidate Rights**: Support for access, rectification, and deletion requests
+
+### Compliance Alignment
+
+LucidMatch is designed to support compliance with:
+- **EEOC Guidelines** (4/5ths rule for adverse impact)
+- **NYC Local Law 144** (Bias audits for automated hiring)
+- **EU AI Act** (High-risk AI transparency)
+- **GDPR Article 22** (Right to explanation)
+- **CCPA** (Data access and deletion rights)
+
+See [Privacy Safeguards](docs/privacy_safeguards.md) for detailed documentation.
+See [Bias Policy](docs/bias_policy.md) for fairness rules and metrics.
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Bias Policy](docs/bias_policy.md) | 4/5ths rule, fairness metrics, bias detection |
+| [Audit Log Template](docs/audit_log_template.md) | Decision log structure and format |
+| [Privacy Safeguards](docs/privacy_safeguards.md) | PII handling and data protection |

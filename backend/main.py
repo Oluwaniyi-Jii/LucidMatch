@@ -98,6 +98,17 @@ def get_job_detail(job_id: int, session: Session = Depends(get_session)):
         "candidates": analyses
     }
 
+# --- DELETE ANALYSIS ---
+
+@app.delete("/api/analyses/{analysis_id}")
+def delete_analysis(analysis_id: int, session: Session = Depends(get_session)):
+    analysis = session.get(Analysis, analysis_id)
+    if not analysis:
+        raise HTTPException(status_code=404, detail="Analysis not found")
+    session.delete(analysis)
+    session.commit()
+    return {"message": "Analysis deleted successfully", "id": analysis_id}
+
 # --- STATS & ANALYSIS ---
 
 @app.get("/api/stats")
@@ -253,7 +264,8 @@ async def analyze_resume(
             "match": match_result,
             "audit": audit_result,
             "curriculum": curriculum,
-            "logs": agent_logs
+            "logs": agent_logs,
+            "resume_text": text_content  # Persist raw text for display
         }
 
         # 8. Save to DB linked to JOB

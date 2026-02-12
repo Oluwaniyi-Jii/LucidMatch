@@ -50,17 +50,33 @@ const Curriculum = () => {
                                     <Box p={2} bg={`${getColor(item.type)}.50`} borderRadius="lg">
                                         <Icon as={getIcon(item.type)} color={`${getColor(item.type)}.600`} boxSize={5} />
                                     </Box>
-                                    <Badge colorScheme={getColor(item.type)}>{item.type}</Badge>
+                                    <Stack direction="row" spacing={2}>
+                                        {item.platform && (
+                                            <Badge colorScheme="gray" variant="outline">{item.platform}</Badge>
+                                        )}
+                                        <Badge colorScheme={getColor(item.type)}>{item.type}</Badge>
+                                    </Stack>
                                 </Box>
 
                                 <Box>
                                     <Heading size="sm" mb={2}>{item.resource}</Heading>
-                                    <Text variant="outline" fontSize="xs" color="slate.500">Target Skill: {item.skill}</Text>
+                                    <Text fontSize="xs" color="slate.500" mb={1}>Target Skill: {item.skill}</Text>
+                                    {item.estimated_time && (
+                                        <Text fontSize="xs" color="slate.400">{item.estimated_time}</Text>
+                                    )}
                                 </Box>
 
-                                <Button size="sm" variant="ghost" rightIcon={<Icon as={ExternalLink} />} justifyContent="flex-start" px={0}>
-                                    Access Resource
-                                </Button>
+                                {item.url ? (
+                                    <ChakraLink href={item.url} isExternal _hover={{ textDecoration: 'none' }}>
+                                        <Button size="sm" variant="solid" colorScheme="brand" rightIcon={<Icon as={ExternalLink} />} w="full">
+                                            Access Resource
+                                        </Button>
+                                    </ChakraLink>
+                                ) : (
+                                    <Button size="sm" variant="ghost" rightIcon={<Icon as={ExternalLink} />} justifyContent="flex-start" px={0} isDisabled>
+                                        No Link Available
+                                    </Button>
+                                )}
                             </Stack>
                         </CardBody>
                     </Card>

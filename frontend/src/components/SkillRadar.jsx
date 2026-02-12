@@ -15,10 +15,10 @@ const SkillRadar = ({ data }) => {
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
                 <PolarGrid stroke={gridColor} />
                 <PolarAngleAxis dataKey="subject" tick={{ fill: textColor, fontSize: 12 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
+                <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
                 <Radar
                     name="Candidate"
-                    dataKey="A"
+                    dataKey="score"
                     stroke={radarColor}
                     strokeWidth={3}
                     fill={radarFill}

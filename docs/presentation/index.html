@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prism - AI-Driven Talent Optimization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================
+           DESIGN SYSTEM TOKENS
+           ======================================== */
+        :root {
+            /* Brand Colors */
+            --brand-50: #F0F5FF;
+            --brand-100: #E0EAFF;
+            --brand-200: #C7D2FE;
+            --brand-300: #A5B4FC;
+            --brand-400: #818CF8;
+            --brand-500: #6366F1;
+            --brand-600: #4F46E5;
+            --brand-700: #4338CA;
+            --brand-800: #3730A3;
+            --brand-900: #312E81;
+
+            /* Slate Colors */
+            --slate-50: #F8FAFC;
+            --slate-100: #F1F5F9;
+            --slate-200: #E2E8F0;
+            --slate-300: #CBD5E1;
+            --slate-400: #94A3B8;
+            --slate-500: #64748B;
+            --slate-600: #475569;
+            --slate-700: #334155;
+            --slate-800: #1E293B;
+            --slate-900: #0F172A;
+
+            /* Semantic Colors */
+            --color-success: #16a34a;
+            --color-warning: #d97706;
+            --color-error: #dc2626;
+
+            /* Typography */
+            --font-family: 'Outfit', sans-serif;
+            --font-size-xs: 0.64rem;
+            --font-size-sm: 0.8rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.563rem;
+            --font-size-2xl: 1.953rem;
+            --font-size-3xl: 2.441rem;
+
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+
+            /* Spacing */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+
+            /* Border Radius */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+            /* Transitions */
+            --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+            --duration-fast: 150ms;
+        }
+
+        /* ========================================
+           BASE STYLES
+           ======================================== */
+        .reveal-viewport {
+            background: var(--slate-50);
+        }
+
+        .reveal {
+            font-family: var(--font-family);
+            font-size: var(--font-size-base);
+            color: var(--slate-900);
+        }
+
+        .reveal h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--slate-900);
+            text-transform: none;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-4);
+        }
+
+        .reveal h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--brand-600);
+            text-transform: none;
+            margin-bottom: var(--space-3);
+        }
+
+        .reveal h3 {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-medium);
+            color: var(--slate-700);
+            margin-bottom: var(--space-4);
+        }
+
+        .reveal h4 {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-medium);
+            color: var(--brand-700);
+            margin: 0 0 var(--space-2) 0;
+        }
+
+        .reveal p,
+        .reveal li {
+            font-size: var(--font-size-sm);
+            color: var(--slate-600);
+            margin-bottom: var(--space-2);
+        }
+
+        .reveal strong {
+            color: var(--slate-900);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .reveal .text-secondary {
+            color: var(--slate-400);
+        }
+
+        /* ========================================
+           COMPONENTS
+           ======================================== */
+        .reveal .card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: var(--space-5);
+            border: 1px solid var(--slate-100);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--duration-fast) var(--ease-out);
+        }
+
+        .reveal .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .reveal .card-brand {
+            background: var(--brand-50);
+            border-color: var(--brand-200);
+        }
+
+        .reveal .card-warning {
+            background: #FFFBEB;
+            border-color: var(--color-warning);
+        }
+
+        .reveal .card-success {
+            background: #F0FDF4;
+            border-color: var(--color-success);
+        }
+
+        .reveal .card-error {
+            background: #FEF2F2;
+            border-color: var(--color-error);
+        }
+
+        .reveal table {
+            font-size: var(--font-size-sm);
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reveal table th {
+            background: var(--brand-600);
+            color: white;
+            padding: var(--space-3) var(--space-4);
+            text-align: left;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .reveal table td {
+            padding: var(--space-3) var(--space-4);
+            border-bottom: 1px solid var(--slate-100);
+            color: var(--slate-700);
+        }
+
+        .reveal table tr:nth-child(even) {
+            background: var(--slate-50);
+        }
+
+        .reveal .badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            text-transform: uppercase;
+        }
+
+        .reveal .badge-primary {
+            background: var(--brand-600);
+            color: white;
+        }
+
+        .reveal .badge-accent {
+            background: var(--brand-100);
+            color: var(--brand-700);
+        }
+
+        .reveal .badge-success {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .reveal .badge-warning {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .reveal .badge-points {
+            background: var(--slate-800);
+            color: white;
+            font-size: var(--font-size-sm);
+            padding: var(--space-2) var(--space-4);
+        }
+
+        .reveal .pipeline {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--space-3);
+            margin: var(--space-5) 0;
+        }
+
+        .reveal .pipeline-step {
+            background: white;
+            border: 2px solid var(--brand-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3) var(--space-4);
+            text-align: center;
+            min-width: 120px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reveal .pipeline-step h4 {
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-1);
+            color: var(--brand-600);
+        }
+
+        .reveal .pipeline-step p {
+            font-size: var(--font-size-xs);
+            color: var(--slate-500);
+            margin: 0;
+        }
+
+        .reveal .pipeline-arrow {
+            color: var(--brand-400);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .reveal .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-5);
+            text-align: left;
+        }
+
+        .reveal .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--space-4);
+            text-align: left;
+        }
+
+        .reveal .status-positive::before {
+            content: "✓ ";
+            color: var(--color-success);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .reveal .status-negative::before {
+            content: "✗ ";
+            color: var(--color-error);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .reveal .quote-block {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--brand-700);
+            border-left: 4px solid var(--brand-500);
+            padding-left: var(--space-5);
+            margin: var(--space-6) 0;
+            font-style: italic;
+        }
+
+        .reveal .quote-block-center {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            color: var(--brand-700);
+            margin: var(--space-8) 0;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .reveal .highlight {
+            background: var(--brand-100);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            color: var(--brand-700);
+        }
+
+        /* Reveal.js Overrides */
+        .reveal .slide-number {
+            background: var(--brand-600);
+            color: white;
+            font-size: 14px;
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+        }
+
+        .reveal .controls button {
+            color: var(--brand-500);
+        }
+
+        .reveal .progress span {
+            background: var(--brand-600);
+        }
+
+        .title-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            padding: var(--space-8) !important;
+        }
+
+        .title-slide h1 {
+            font-size: calc(var(--font-size-3xl) * 1.5);
+            margin-bottom: var(--space-4);
+            letter-spacing: -0.03em;
+        }
+
+        .title-slide .subtitle {
+            font-size: var(--font-size-xl);
+            color: var(--slate-500);
+            margin-bottom: var(--space-8);
+            line-height: 1.5;
+        }
+
+        .reveal .feature-item {
+            background: white;
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            border-left: 3px solid var(--brand-500);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .reveal .feature-item p {
+            font-size: var(--font-size-xs);
+            color: var(--slate-500);
+            margin: var(--space-1) 0 0 0;
+        }
+
+        .reveal section {
+            padding: var(--space-8);
+        }
+
+        .candidate-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            box-shadow: var(--shadow-sm);
+            text-align: left;
+        }
+
+        .candidate-card h4 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-2);
+        }
+
+        .candidate-card .stat {
+            font-size: var(--font-size-xs);
+            color: var(--slate-500);
+            margin-bottom: var(--space-1);
+        }
+
+        .candidate-card.flagged {
+            border: 2px solid var(--color-warning);
+        }
+
+        .candidate-card.clean {
+            border: 2px solid var(--color-success);
+        }
+
+        .candidate-card.rejected {
+            border: 2px solid var(--color-error);
+            background: #FEF2F2;
+        }
+
+        .rubric-tag {
+            display: inline-block;
+            background: var(--slate-800);
+            color: white;
+            padding: 4px 12px;
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- SLIDE 1: Title -->
+            <section class="title-slide">
+                <h1>Prism</h1>
+                <p class="subtitle">AI-Driven Talent Optimization</p>
+                <p class="quote-block-center">"The recommendation is not the product.<br>The explanation and the audit
+                    trail are."</p>
+                <p style="color: var(--slate-400); font-size: var(--font-size-base); margin-top: var(--space-8);">
+                    EY-Sponsored Competition | February 2026</p>
+            </section>
+
+            <!-- SLIDE 2: Problem Understanding (15 pts) -->
+            <section>
+                <span class="rubric-tag">Problem Understanding &amp; Business Value: 15 pts</span>
+                <h2>The Enterprise Challenge</h2>
+                <div class="grid-2">
+                    <div class="card card-error">
+                        <h4 style="color: var(--color-error);">Current State</h4>
+                        <p class="status-negative">Keyword matching misses skill context</p>
+                        <p class="status-negative">No visibility into recommendation logic</p>
+                        <p class="status-negative">Bias in AI hiring goes undetected</p>
+                        <p class="status-negative">Generic upskilling wastes resources</p>
+                    </div>
+                    <div class="card card-success">
+                        <h4 style="color: var(--color-success);">Business Value</h4>
+                        <p class="status-positive">Faster, fairer talent placement</p>
+                        <p class="status-positive">Defensible, auditable decisions</p>
+                        <p class="status-positive">Reduced legal and compliance risk</p>
+                        <p class="status-positive">Targeted upskilling with clear ROI</p>
+                    </div>
+                </div>
+                <p
+                    style="margin-top: var(--space-4); text-align: center; color: var(--slate-700); font-weight: var(--font-weight-semibold);">
+                    <span class="highlight">Core Insight:</span> Organizations need AI they can explain, defend, and
+                    audit.
+                </p>
+            </section>
+
+            <!-- SLIDE 3: AI Functionality (20 pts) - Skill Matching -->
+            <section>
+                <span class="rubric-tag">AI Functionality &amp; Accuracy: 20 pts</span>
+                <h2>Accuracy: Beyond Buzzwords</h2>
+                <h3>Can the AI catch a keyword stuffer?</h3>
+                <div class="grid-2">
+                    <div class="candidate-card rejected">
+                        <h4 style="color: var(--color-error);">The "Keyword Stuffer"</h4>
+                        <p class="stat">Position: Senior Full-Stack Engineer</p>
+                        <p class="stat">Skills Listed: 10+ languages (Rust, Go, Python...)</p>
+                        <p class="stat">Actual Project: Built 1 calculator app</p>
+                        <p class="stat">Experience: IT Support (misleadingly framed)</p>
+                        <div
+                            style="margin-top: var(--space-4); border-top: 1px solid rgba(0,0,0,0.1); padding-top: var(--space-2);">
+                            <strong style="color: var(--color-error);">Prism Result: Rejected (Score 35%)</strong>
+                            <p style="font-size: var(--font-size-xs); margin-top: var(--space-1);">"Lack of production
+                                experience identified. Skills unsubstantiated by project history."</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="feature-item"><strong>10-Criteria Evaluation</strong>
+                            <p>We weigh <em>evidence</em>, not just keywords.</p>
+                        </div>
+                        <div class="feature-item"><strong>Contextual Reasoning</strong>
+                            <p>Understands that "IT Support" ≠ "Distributed Systems Engineering"</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: AI Functionality (20 pts) - Upskilling -->
+            <section>
+                <span class="rubric-tag">AI Functionality &amp; Accuracy: 20 pts</span>
+                <h2>Personalized Upskilling Plans</h2>
+                <h3>Practical, Sequenced, Cost-Aware</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Example Output</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Target Skill Gap</td>
+                            <td>React.js, Tableau, Google Analytics 4</td>
+                        </tr>
+                        <tr>
+                            <td>Resource Type</td>
+                            <td>Course, Article, or Certification</td>
+                        </tr>
+                        <tr>
+                            <td>Platform</td>
+                            <td>Coursera, LinkedIn Learning, Udemy</td>
+                        </tr>
+                        <tr>
+                            <td>Estimated Time</td>
+                            <td>20 hours per skill</td>
+                        </tr>
+                        <tr>
+                            <td>Direct Access</td>
+                            <td>One-click link to resource</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="card card-brand" style="margin-top: var(--space-4); text-align: center;">
+                    <strong>Curriculum Library:</strong> All resources centralized, searchable, and mapped to skill gaps
+                </div>
+            </section>
+
+            <!-- SLIDE 5: Explainability & Governance (20 pts) -->
+            <section>
+                <span class="rubric-tag">Explainability &amp; Governance: 20 pts</span>
+                <h2>Transparent, Human-Readable Explanations</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <h4>Per Recommendation</h4>
+                        <p class="status-positive">10-Criteria Breakdown with scores</p>
+                        <p class="status-positive">Evidence citations from resume text</p>
+                        <p class="status-positive">Reasoning trace for each factor</p>
+                        <p class="status-positive">Overall match score with justification</p>
+                    </div>
+                    <div class="card">
+                        <h4>Governance Dashboard</h4>
+                        <p class="status-positive">Decision log for all analyses</p>
+                        <p class="status-positive">Bias flags and fairness scores</p>
+                        <p class="status-positive">Searchable audit trail</p>
+                        <p class="status-positive">Neural logs: Raw AI I/O</p>
+                    </div>
+                </div>
+                <p class="quote-block" style="margin-top: var(--space-4);">"The explanation and the audit trail are the
+                    product."</p>
+            </section>
+
+            <!-- SLIDE 6: Explainability & Governance (20 pts) - Bias Detection -->
+            <section>
+                <span class="rubric-tag">Explainability &amp; Governance: 20 pts</span>
+                <h2>Bias Detection and Fairness Checks</h2>
+                <div class="grid-3">
+                    <div class="card">
+                        <h4 style="color: var(--color-warning);">Socioeconomic Proxies</h4>
+                        <p>Elite university mentions</p>
+                        <p>Expensive hobbies (sailing, polo)</p>
+                        <p>Private club memberships</p>
+                    </div>
+                    <div class="card">
+                        <h4 style="color: var(--color-warning);">Gender Bias</h4>
+                        <p>Gendered keyword weighting</p>
+                        <p>Leadership language patterns</p>
+                        <p>Career gap penalties</p>
+                    </div>
+                    <div class="card">
+                        <h4 style="color: var(--color-warning);">Age Indicators</h4>
+                        <p>"Digital native" assumptions</p>
+                        <p>"Seasoned veteran" stereotypes</p>
+                        <p>Graduation year inference</p>
+                    </div>
+                </div>
+                <p style="margin-top: var(--space-4); text-align: center;">
+                    <span class="badge badge-warning">Flagged for Review</span>
+                    <span style="margin-left: var(--space-2); color: var(--slate-600);">Decisions with bias signals
+                        require human approval (Verified in Stress Tests)</span>
+                </p>
+            </section>
+
+            <!-- SLIDE 7: Technical Design (20 pts) -->
+            <section>
+                <span class="rubric-tag">Technical Design: 20 pts</span>
+                <h2>Multi-Agent Architecture</h2>
+                <h3>Scalable, Documented, Secure</h3>
+                <div class="pipeline">
+                    <div class="pipeline-step">
+                        <h4>Parser</h4>
+                        <p>Extracts skills</p>
+                    </div>
+                    <span class="pipeline-arrow">→</span>
+                    <div class="pipeline-step">
+                        <h4>Reasoner</h4>
+                        <p>10-criteria scoring</p>
+                    </div>
+                    <span class="pipeline-arrow">→</span>
+                    <div class="pipeline-step">
+                        <h4>Auditor</h4>
+                        <p>Bias detection</p>
+                    </div>
+                    <span class="pipeline-arrow">→</span>
+                    <div class="pipeline-step">
+                        <h4>Strategist</h4>
+                        <p>Upskilling paths</p>
+                    </div>
+                </div>
+                <div class="grid-2" style="margin-top: var(--space-4);">
+                    <div class="card">
+                        <h4>Security & Privacy</h4>
+                        <p class="status-positive">In-session processing only</p>
+                        <p class="status-positive">No persistent PII storage</p>
+                        <p class="status-positive">API key isolation</p>
+                    </div>
+                    <div class="card">
+                        <h4>Scalability</h4>
+                        <p class="status-positive">Stateless agents, parallelizable</p>
+                        <p class="status-positive">Each agent logs I/O for tracing</p>
+                        <p class="status-positive">Modular, extensible design</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Demo - bias_stress_test results -->
+            <section>
+                <span class="rubric-tag">User Experience &amp; Presentation: 15 pts</span>
+                <h2>Demo: Bias Detection in Action</h2>
+                <h3>Same Role, Two Candidates (Stress Test Results)</h3>
+                <div class="grid-2">
+                    <div class="candidate-card flagged">
+                        <span class="badge badge-warning">Flagged</span>
+                        <h4>Candidate A: "Privileged" Profile</h4>
+                        <p class="stat">Education: Harvard, Phillips Exeter</p>
+                        <p class="stat">Hobbies: Sailing, Polo, Yacht Club</p>
+                        <p class="stat">Experience: Family investment office</p>
+                        <div
+                            style="margin-top: var(--space-3); color: var(--color-warning); font-weight: var(--font-weight-semibold);">
+                            <span class="status-negative">Socioeconomic proxy signals detected</span>
+                        </div>
+                    </div>
+                    <div class="candidate-card clean">
+                        <span class="badge badge-success">Clean</span>
+                        <h4>Candidate B: "Qualified" Profile</h4>
+                        <p class="stat">Education: Ohio State, U.Cincinnati MBA</p>
+                        <p class="stat">Background: First-gen, worked through college</p>
+                        <p class="stat">Experience: VP Marketing, team of 12</p>
+                        <div
+                            style="margin-top: var(--space-3); color: var(--color-success); font-weight: var(--font-weight-semibold);">
+                            <span class="status-positive">No bias flags, higher merit score</span>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: var(--space-4); text-align: center; color: var(--slate-600);">
+                    The Auditor ensures <strong>merit, not pedigree</strong>, drives final ranking.
+                </p>
+            </section>
+
+            <!-- SLIDE 9: Innovation (10 pts) -->
+            <section>
+                <span class="rubric-tag">Innovation &amp; Creativity: 10 pts</span>
+                <h2>What Makes LucidMatch Different</h2>
+                <div class="grid-2">
+                    <div>
+                        <div class="card" style="margin-bottom: var(--space-4);">
+                            <h4>Glass Box, Not Black Box</h4>
+                            <p>Every recommendation includes full reasoning trace and evidence citations. No hidden
+                                logic.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Audit Trail as Product</h4>
+                            <p>The governance dashboard isn't an afterthought. It's the core value proposition.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="card" style="margin-bottom: var(--space-4);">
+                            <h4>Proactive Bias Detection</h4>
+                            <p>We assume bias is possible and build detection into every decision path.</p>
+                        </div>
+                        <div class="card">
+                            <h4>Regulation-Ready</h4>
+                            <p>As AI hiring faces scrutiny, LucidMatch is already compliant by design.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Summary & Closing -->
+            <section>
+                <h2>LucidMatch: Summary</h2>
+                <table style="margin-bottom: var(--space-5);">
+                    <thead>
+                        <tr>
+                            <th>Criterion</th>
+                            <th>Our Approach</th>
+                            <th>Pts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Problem Understanding</td>
+                            <td>Solving trust deficit in AI hiring</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>AI Accuracy</td>
+                            <td>Validates evidence, catches "keyword stuffers"</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>Explainability</td>
+                            <td>Glass Box architecture, full audit trail</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>Technical Design</td>
+                            <td>Multi-agent pipeline, privacy-first</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>User Experience</td>
+                            <td>Clean dashboard, intuitive navigation</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>Innovation</td>
+                            <td>"The explanation is the product"</td>
+                            <td>10</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="quote-block">"The recommendation is not the product.<br>The explanation and the audit trail
+                    are."</p>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: 'c/t',
+            transition: 'fade',
+            transitionSpeed: 'fast',
+            center: true,
+            width: 1280,
+            height: 720,
+            margin: 0.1,
+
+            // Keyboard navigation
+            keyboard: true,
+            controls: true,
+            controlsTutorial: true,
+
+            // Arrow key bindings
+            navigationMode: 'default' // Left/Right: horizontal. Up/Down: vertical or next/prev
+        });
+    </script>
+</body>
+
+</html>
