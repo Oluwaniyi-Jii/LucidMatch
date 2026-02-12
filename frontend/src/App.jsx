@@ -642,7 +642,7 @@ function App() {
                                         <Card><CardHeader pb={2}><HStack><Icon as={FiClock} color="green.500" /><Heading size="md">Quick Wins</Heading></HStack></CardHeader><CardBody><VStack align="stretch" spacing={2}>{(results.upskill_path.quick_wins || []).map((r, idx) => (<Box key={idx} p={3} bg="green.50" borderRadius="md" borderLeft="4px solid" borderColor="green.400"><Text fontWeight="bold" fontSize="sm">{r.title}</Text><Badge colorScheme="green" fontSize="xs">{r.provider}</Badge></Box>))}</VStack></CardBody></Card>
                                         <Card><CardHeader pb={2}><HStack><Icon as={FiAward} color="purple.500" /><Heading size="md">Core Learning</Heading></HStack></CardHeader><CardBody><VStack align="stretch" spacing={2}>{(results.upskill_path.core_learning || []).map((r, idx) => (<Box key={idx} p={3} bg="purple.50" borderRadius="md" borderLeft="4px solid" borderColor="purple.400"><Text fontWeight="bold" fontSize="sm">{r.title}</Text><Badge colorScheme="purple" fontSize="xs">{r.provider}</Badge></Box>))}</VStack></CardBody></Card>
                                     </SimpleGrid>
-                                </VStack>
+            </VStack>
                             )}
                         </TabPanel>
                     </TabPanels>
