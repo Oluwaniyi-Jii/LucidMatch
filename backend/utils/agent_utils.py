@@ -27,6 +27,8 @@ class AgentResponseParser:
         Raises:
             ValueError: If no valid JSON found and no fallback provided
         """
+        import re
+        
         # First try direct JSON parse
         try:
             return json.loads(content)
@@ -45,11 +47,21 @@ class AgentResponseParser:
                 raise ValueError("No JSON object found in response")
             
             json_str = content[start:end]
+            
+            # Clean up common JSON formatting issues
+            # Remove trailing commas before closing braces/brackets
+            json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+            
+            # Try parsing the cleaned JSON
             result = json.loads(json_str)
             logger.debug("Successfully extracted JSON from response")
             return result
             
         except (json.JSONDecodeError, ValueError) as e:
+            # Log the error for debugging
+            logger.error(f"JSON parsing failed: {e}")
+            logger.error(f"Content preview: {content[:500]}...")
+            
             if fallback is not None:
                 logger.warning(f"JSON extraction failed: {e}, using fallback")
                 return fallback

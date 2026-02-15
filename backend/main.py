@@ -78,7 +78,38 @@ async def compare_candidates(req: CompareRequest, session: Session = Depends(get
     # 4. Run Comparator
     comparison = await comparator.compare_candidates(p1_data, p2_data, job_context)
     
+    # 5. Add radar chart data for visual comparison
+    try:
+        # Extract match data from raw_json
+        match1 = json.loads(c1.raw_json).get("match", {})
+        match2 = json.loads(c2.raw_json).get("match", {})
+        
+        # Get radar data from both candidates
+        radar1 = match1.get("radar_chart_data", [])
+        radar2 = match2.get("radar_chart_data", [])
+        
+        # Merge the radar data for side-by-side comparison
+        if radar1 and radar2:
+            # Create combined data with both candidate scores
+            merged_radar = []
+            for item1 in radar1:
+                subject = item1.get("subject", "")
+                # Find matching item in radar2
+                item2 = next((item for item in radar2 if item.get("subject") == subject), None)
+                if item2:
+                    merged_radar.append({
+                        "subject": subject,
+                        "candidateA": item1.get("score", 0),
+                        "candidateB": item2.get("score", 0),
+                        "fullMark": 10
+                    })
+            comparison["radar_data"] = merged_radar
+    except Exception as e:
+        logger.warning(f"Could not merge radar data: {e}")
+        comparison["radar_data"] = None
+    
     return comparison
+
 
 @app.get("/")
 def read_root():
@@ -138,10 +169,61 @@ def get_stats(session: Session = Depends(get_session)):
             if scores:
                 avg_score = sum(scores) / len(scores)
         
+        # Get top 5 candidates by match score
+        top_candidates = []
+        sorted_analyses = sorted(
+            [a for a in analyses if a.match_score is not None],
+            key=lambda x: x.match_score,
+            reverse=True
+        )[:5]
+        
+        for a in sorted_analyses:
+            job = session.get(Job, a.job_id)
+            top_candidates.append({
+                "id": a.id,
+                "candidate": a.candidate_name or "Unknown",
+                "role": job.title if job else "Unknown Role",
+                "score": a.match_score,
+                "job_id": a.job_id
+            })
+        
+        # Get recent 5 analyses
+        recent_analyses = []
+        recent = sorted(analyses, key=lambda x: x.id, reverse=True)[:5]
+        for a in recent:
+            job = session.get(Job, a.job_id)
+            recent_analyses.append({
+                "id": a.id,
+                "candidate": a.candidate_name or "Unknown",
+                "role": job.title if job else "Unknown Role",
+                "score": a.match_score or 0,
+                "job_id": a.job_id
+            })
+        
+        # Calculate flagged count and average fairness
+        flagged_count = 0
+        total_fairness = 0
+        for a in analyses:
+            try:
+                data = json.loads(a.raw_json)
+                audit = data.get("audit", {})
+                if audit.get("flagged", False):
+                    flagged_count += 1
+                fairness = audit.get("fairness_score", 100)
+                total_fairness += fairness
+            except:
+                total_fairness += 100
+        
+        avg_fairness = int(total_fairness / len(analyses)) if analyses else 100
+        
         return {
             "total_candidates": count,
             "active_jobs": len(jobs),
             "average_score": int(avg_score),
+            "flagged_count": flagged_count,
+            "avg_fairness": avg_fairness,
+            "top_candidates": top_candidates,
+            "recent_analyses": recent_analyses,
             "trend": "+12% this week" 
         }
     except Exception as e:

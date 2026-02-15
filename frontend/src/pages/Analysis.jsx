@@ -2,7 +2,6 @@ import { Box, Heading, Text, VStack, SimpleGrid, Card, CardBody, Badge, HStack, 
 import { useState } from 'react'
 import { CheckCircle2, AlertCircle, TrendingUp, Clock } from 'lucide-react'
 import FileUpload from '../components/FileUpload'
-import SkillRadar from '../components/SkillRadar'
 
 const Analysis = () => {
     const [results, setResults] = useState(null)
@@ -25,9 +24,6 @@ const Analysis = () => {
             // Key insights
             strengths: data.match?.key_strengths || [],
             concerns: data.match?.key_concerns || [],
-
-            // Charts
-            radarData: data.match?.radar_chart_data || [],
 
             // Legacy compatibility
             score: evaluation.total_score || 0,
@@ -134,16 +130,6 @@ const Analysis = () => {
                             </Card>
                         </SimpleGrid>
 
-                        {/* Radar Chart */}
-                        <Card>
-                            <CardBody>
-                                <Heading size="sm" mb={6}>10-Criteria Evaluation Breakdown</Heading>
-                                <Box h="400px" w="full">
-                                    <SkillRadar data={results.radarData} />
-                                </Box>
-                            </CardBody>
-                        </Card>
-
                         {/* Detailed Criteria Scores */}
                         <Card>
                             <CardBody>
@@ -181,7 +167,7 @@ const Analysis = () => {
                                                     </Text>
                                                 )}
                                                 {key === 'trainable_skills' && criterion.skills_identified?.length > 0 && (
-                                                    <Box mt={2} p={2} bg="blue.50" borderRadius="md">
+                                                    <Box mt={2} p={2} bg="teal.50" borderRadius="md">
                                                         <Text fontSize="xs" fontWeight="bold" mb={1}>Trainable Skills:</Text>
                                                         <Text fontSize="xs">{criterion.skills_identified.join(', ')}</Text>
                                                         {criterion.estimated_learning_time && (
@@ -194,7 +180,7 @@ const Analysis = () => {
                                                 )}
                                                 {key === 'potential_readiness' && (
                                                     <HStack mt={2} spacing={4}>
-                                                        <Box flex={1} p={2} bg="purple.50" borderRadius="md">
+                                                        <Box flex={1} p={2} bg="amber.50" borderRadius="md">
                                                             <Text fontSize="xs" fontWeight="bold">Potential: {criterion.potential_score}/10</Text>
                                                         </Box>
                                                         <Box flex={1} p={2} bg="green.50" borderRadius="md">

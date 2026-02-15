@@ -28,8 +28,8 @@ const Curriculum = () => {
 
     const getColor = (type) => {
         switch (type?.toLowerCase()) {
-            case 'course': return 'purple';
-            case 'article': return 'blue';
+            case 'course': return 'orange';
+            case 'article': return 'teal';
             default: return 'green';
         }
     }

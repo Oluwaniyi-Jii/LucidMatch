@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import apiClient from '../api/client'
 import SkillRadar from '../components/SkillRadar'
-import { AlertCircle, CheckCircle2, BookOpen, Search, Terminal, Activity, Swords, Trash2, FileText } from 'lucide-react'
+import { AlertCircle, CheckCircle2, BookOpen, Search, Activity, Trash2, FileText } from 'lucide-react'
 
 const JobDetail = () => {
     const { id } = useParams()
@@ -26,18 +26,6 @@ const JobDetail = () => {
     const { isOpen: isAuditOpen, onOpen: onAuditOpen, onClose: onAuditClose } = useDisclosure()
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false)
     const [resumeText, setResumeText] = useState(null)
-    const [demoMode, setDemoMode] = useState(() => {
-        return localStorage.getItem('demoMode') === 'true'
-    })
-
-    // Listen for demo mode changes from other pages
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setDemoMode(localStorage.getItem('demoMode') === 'true')
-        }
-        window.addEventListener('storage', handleStorageChange)
-        return () => window.removeEventListener('storage', handleStorageChange)
-    }, [])
 
     useEffect(() => {
         const fetchJob = async () => {
@@ -179,7 +167,7 @@ const JobDetail = () => {
                     </HStack>
                 </Box>
                 {compareSelection.length === 2 && (
-                    <Button leftIcon={<Icon as={Swords} />} colorScheme="purple" onClick={runComparison}>
+                    <Button colorScheme="teal" onClick={runComparison}>
                         Compare Selected (2)
                     </Button>
                 )}
@@ -206,28 +194,12 @@ const JobDetail = () => {
                                         isChecked={compareSelection.includes(c.id)}
                                         onChange={() => toggleCompare(c.id)}
                                         isDisabled={!compareSelection.includes(c.id) && compareSelection.length >= 2}
-                                        colorScheme="purple"
+                                        colorScheme="teal"
                                     />
                                 </Td>
                                 <Td fontWeight="bold" color="slate.400">#{index + 1}</Td>
                                 <Td>
-                                    <Stack spacing={1}>
-                                        <Text fontWeight="medium">{c.candidate_name}</Text>
-                                        {demoMode && c.test_metadata && (() => {
-                                            try {
-                                                const testInfo = typeof c.test_metadata === 'string'
-                                                    ? JSON.parse(c.test_metadata)
-                                                    : c.test_metadata
-                                                return (
-                                                    <Badge colorScheme="purple" fontSize="xs" maxW="300px">
-                                                        {testInfo.demo_label || testInfo.test_name}
-                                                    </Badge>
-                                                )
-                                            } catch (e) {
-                                                return null
-                                            }
-                                        })()}
-                                    </Stack>
+                                    <Text fontWeight="medium">{c.candidate_name}</Text>
                                 </Td>
                                 <Td isNumeric>
                                     <Badge colorScheme={c.match_score > 75 ? 'green' : c.match_score > 50 ? 'yellow' : 'red'} fontSize="0.9em">
@@ -241,7 +213,7 @@ const JobDetail = () => {
                                             icon={<Icon as={FileText} />}
                                             size="sm"
                                             variant="ghost"
-                                            colorScheme="blue"
+                                            colorScheme="teal"
                                             aria-label="View Resume"
                                             onClick={() => handleViewResume(c)}
                                         />
@@ -307,46 +279,6 @@ const JobDetail = () => {
                                     {/* 1. OVERVIEW PANEL */}
                                     <TabPanel>
                                         <Stack spacing={6} p={4}>
-                                            {/* Demo Mode Test Info */}
-                                            {demoMode && selectedCandidate?.test_metadata && (() => {
-                                                try {
-                                                    const testInfo = typeof selectedCandidate.test_metadata === 'string'
-                                                        ? JSON.parse(selectedCandidate.test_metadata)
-                                                        : selectedCandidate.test_metadata
-
-                                                    return (
-                                                        <Card bg="purple.50" borderColor="purple.400" borderWidth="3px">
-                                                            <CardBody>
-                                                                <Stack spacing={4}>
-                                                                    <HStack align="start">
-                                                                        <Icon as={Terminal} color="purple.600" boxSize={6} />
-                                                                        <Box flex="1">
-                                                                            <Badge colorScheme="purple" fontSize="xs" mb={2}>DEMO MODE</Badge>
-                                                                            <Heading size="md" color="purple.800">
-                                                                                {testInfo.demo_label || testInfo.test_name || "Test Scenario"}
-                                                                            </Heading>
-                                                                        </Box>
-                                                                    </HStack>
-                                                                    {testInfo.purpose && (
-                                                                        <Box>
-                                                                            <Text fontSize="xs" fontWeight="bold" color="purple.700" mb={1}>What We're Testing:</Text>
-                                                                            <Text fontSize="sm">{testInfo.purpose}</Text>
-                                                                        </Box>
-                                                                    )}
-                                                                    {testInfo.success_criteria && (
-                                                                        <Box>
-                                                                            <Text fontSize="xs" fontWeight="bold" color="purple.700" mb={1}>Success Looks Like:</Text>
-                                                                            <Text fontSize="sm" whiteSpace="pre-wrap">{testInfo.success_criteria}</Text>
-                                                                        </Box>
-                                                                    )}
-                                                                </Stack>
-                                                            </CardBody>
-                                                        </Card>
-                                                    )
-                                                } catch (e) {
-                                                    return null
-                                                }
-                                            })()}
                                             <SimpleGrid columns={3} spacing={4}>
                                                 <Card bg="brand.50" variant="outline" borderColor="brand.100">
                                                     <CardBody p={4} textAlign="center">
@@ -381,10 +313,6 @@ const JobDetail = () => {
                                                 <Text fontSize="sm" color="slate.600" lineHeight="relaxed">
                                                     {selectedCandidate.match.reasoning}
                                                 </Text>
-                                            </Box>
-
-                                            <Box h="250px" border="1px" borderColor="slate.200" borderRadius="xl" p={4}>
-                                                <SkillRadar data={selectedCandidate.match.radar_chart_data || []} />
                                             </Box>
                                         </Stack>
                                     </TabPanel>
@@ -479,9 +407,9 @@ const JobDetail = () => {
                                                             {/* Special display for potential/readiness */}
                                                             {key === 'potential_readiness' && (
                                                                 <SimpleGrid columns={2} spacing={4} mt={3}>
-                                                                    <Box p={3} bg="purple.50" borderRadius="md" textAlign="center">
-                                                                        <Text fontSize="xs" fontWeight="bold" color="purple.600">POTENTIAL</Text>
-                                                                        <Text fontSize="xl" fontWeight="bold" color="purple.700">{criterion.potential_score}/10</Text>
+                                                                    <Box p={3} bg="amber.50" borderRadius="md" textAlign="center">
+                                                                        <Text fontSize="xs" fontWeight="bold" color="amber.600">POTENTIAL</Text>
+                                                                        <Text fontSize="xl" fontWeight="bold" color="amber.700">{criterion.potential_score}/10</Text>
                                                                     </Box>
                                                                     <Box p={3} bg="green.50" borderRadius="md" textAlign="center">
                                                                         <Text fontSize="xs" fontWeight="bold" color="green.600">READINESS</Text>
@@ -535,7 +463,7 @@ const JobDetail = () => {
                                         <Stack spacing={6} p={4}>
                                             <HStack justify="space-between">
                                                 <Heading size="md">Black Box Recorder</Heading>
-                                                <Badge colorScheme="purple" variant="solid"><Icon as={Terminal} size={12} style={{ display: 'inline', marginRight: '4px' }} /> SYSTEM LOGS</Badge>
+                                                <Badge colorScheme="gray" variant="solid">SYSTEM LOGS</Badge>
                                             </HStack>
                                             <Text color="slate.500">Raw timeline of agent inputs and outputs.</Text>
 
@@ -583,27 +511,24 @@ const JobDetail = () => {
             <Modal isOpen={isModalOpen} onClose={onModalClose} size="4xl">
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader bg="purple.50" borderBottomWidth="1px" borderColor="purple.100">
-                        <HStack>
-                            <Icon as={Swords} color="purple.600" />
-                            <Text color="purple.800">Head-to-Head Analysis</Text>
-                        </HStack>
+                    <ModalHeader bg="teal.50" borderBottomWidth="1px" borderColor="teal.100">
+                        <Text color="teal.800">Candidate Comparison</Text>
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody p={6}>
                         {isComparing && (
                             <VStack py={12}>
-                                <Text className="animate-pulse" color="purple.600" fontWeight="bold">To The Arena...</Text>
-                                <Progress size="xs" isIndeterminate colorScheme="purple" w="200px" borderRadius="full" mt={4} />
+                                <Text className="animate-pulse" color="teal.600" fontWeight="bold">Analyzing candidates...</Text>
+                                <Progress size="xs" isIndeterminate colorScheme="teal" w="200px" borderRadius="full" mt={4} />
                             </VStack>
                         )}
 
                         {!isComparing && comparisonData && (
                             <Stack spacing={8}>
-                                <Card variant="filled" bg="purple.50">
+                                <Card variant="filled" bg="teal.50">
                                     <CardBody>
-                                        <Heading size="sm" color="purple.900" mb={2}>The Verdict</Heading>
-                                        <Text fontSize="lg" fontWeight="medium" color="purple.800">
+                                        <Heading size="sm" color="teal.900" mb={2}>The Verdict</Heading>
+                                        <Text fontSize="lg" fontWeight="medium" color="teal.800">
                                             {comparisonData.verdict}
                                         </Text>
                                     </CardBody>
@@ -616,7 +541,7 @@ const JobDetail = () => {
                                             {comparisonData.comparison_points?.map((point, i) => (
                                                 <HStack key={i} justify="space-between" p={3} bg="white" borderRadius="md" borderWidth="1px" borderColor="slate.200">
                                                     <Text fontSize="sm" fontWeight="bold" color="slate.600">{point.dimension}</Text>
-                                                    <Badge colorScheme={point.winner === 'A' ? 'blue' : 'orange'}>
+                                                    <Badge colorScheme={point.winner === 'A' ? 'teal' : 'orange'}>
                                                         Winner: Candidate {point.winner}
                                                     </Badge>
                                                 </HStack>
@@ -627,8 +552,8 @@ const JobDetail = () => {
                                     <Box>
                                         <Heading size="sm" mb={4} color="slate.700">Key Advantages</Heading>
                                         <Stack spacing={2}>
-                                            <Text fontSize="xs" fontWeight="bold" color="blue.600">CANDIDATE A</Text>
-                                            <VStack align="start" spacing={1} pl={2} borderLeft="2px" borderColor="blue.200" mb={4}>
+                                            <Text fontSize="xs" fontWeight="bold" color="teal.600">CANDIDATE A</Text>
+                                            <VStack align="start" spacing={1} pl={2} borderLeft="2px" borderColor="teal.200" mb={4}>
                                                 {comparisonData.advantage_a?.map((adv, i) => (
                                                     <Text key={i} fontSize="sm" color="slate.600">- {adv}</Text>
                                                 ))}
@@ -643,6 +568,19 @@ const JobDetail = () => {
                                         </Stack>
                                     </Box>
                                 </SimpleGrid>
+
+                                {/* Radar Chart Comparison */}
+                                <Card>
+                                    <CardBody>
+                                        <Heading size="sm" mb={4} color="slate.700">Skill Comparison Chart</Heading>
+                                        <Text fontSize="sm" color="slate.500" mb={4}>
+                                            Visual comparison of candidate skills across all evaluation criteria
+                                        </Text>
+                                        <Box h="400px" w="full">
+                                            <SkillRadar data={comparisonData.radar_data || []} />
+                                        </Box>
+                                    </CardBody>
+                                </Card>
                             </Stack>
                         )}
                     </ModalBody>

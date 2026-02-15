@@ -74,7 +74,7 @@ const Jobs = () => {
                                     <Box p={2} bg="brand.50" borderRadius="lg">
                                         <Icon as={Briefcase} color="brand.600" boxSize={5} />
                                     </Box>
-                                    <Badge colorScheme={job.department === 'Engineering' ? 'blue' : 'purple'}>
+                                    <Badge colorScheme={job.department === 'Engineering' ? 'teal' : 'orange'}>
                                         {job.department}
                                     </Badge>
                                 </Box>

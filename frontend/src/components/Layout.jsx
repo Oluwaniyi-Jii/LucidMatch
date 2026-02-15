@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Text, VStack } from '@chakra-ui/react'
+import { Box, Flex, Icon, Text, HStack } from '@chakra-ui/react'
 import { LayoutDashboard, FileText, ShieldCheck, BookOpen, Briefcase } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -7,33 +7,29 @@ const NavItem = ({ icon, children, to }) => {
     const isActive = location.pathname === to
 
     return (
-        <Link to={to} style={{ width: '100%' }}>
+        <Link to={to}>
             <Flex
                 align="center"
-                p="3"
-                mx="4"
+                px="4"
+                py="2"
                 borderRadius="lg"
-                role="group"
                 cursor="pointer"
                 bg={isActive ? 'brand.50' : 'transparent'}
                 color={isActive ? 'brand.600' : 'slate.600'}
                 _hover={{
-                    bg: isActive ? 'brand.50' : 'slate.50',
+                    bg: isActive ? 'brand.50' : 'slate.100',
                     color: isActive ? 'brand.600' : 'slate.900',
                 }}
                 fontWeight={isActive ? '600' : '500'}
                 transition="all 0.2s"
             >
                 <Icon
-                    mr="4"
-                    fontSize="20"
+                    mr={2}
+                    fontSize="18"
                     as={icon}
                     color={isActive ? 'brand.600' : 'slate.400'}
-                    _groupHover={{
-                        color: isActive ? 'brand.600' : 'slate.600',
-                    }}
                 />
-                {children}
+                <Text fontSize="sm">{children}</Text>
             </Flex>
         </Link>
     )
@@ -41,38 +37,44 @@ const NavItem = ({ icon, children, to }) => {
 
 const Layout = ({ children }) => {
     return (
-        <Flex h="100vh" bg="slate.50">
-            {/* Sidebar */}
+        <Box minH="100vh" bg="slate.50">
+            {/* Topbar */}
             <Box
-                w="64"
                 bg="white"
-                borderRight="1px"
+                borderBottom="1px"
                 borderColor="slate.200"
-                display={{ base: 'none', md: 'block' }}
-                py="8"
+                position="sticky"
+                top="0"
+                zIndex="10"
             >
-                <Flex align="center" px="8" mb="10">
+                <Flex
+                    maxW="7xl"
+                    mx="auto"
+                    px="8"
+                    py="4"
+                    align="center"
+                    justify="space-between"
+                >
                     <Text fontSize="2xl" fontWeight="bold" color="brand.600" letterSpacing="tight">
                         Prism
                     </Text>
+                    <HStack spacing="2">
+                        <NavItem icon={LayoutDashboard} to="/">Dashboard</NavItem>
+                        <NavItem icon={Briefcase} to="/jobs">Job Board</NavItem>
+                        <NavItem icon={FileText} to="/analysis">New Analysis</NavItem>
+                        <NavItem icon={ShieldCheck} to="/governance">Governance</NavItem>
+                        <NavItem icon={BookOpen} to="/upskill">Curriculum</NavItem>
+                    </HStack>
                 </Flex>
-
-                <VStack spacing="1" align="stretch">
-                    <NavItem icon={LayoutDashboard} to="/">Dashboard</NavItem>
-                    <NavItem icon={Briefcase} to="/jobs">Job Board</NavItem>
-                    <NavItem icon={FileText} to="/analysis">New Analysis</NavItem>
-                    <NavItem icon={ShieldCheck} to="/governance">Governance</NavItem>
-                    <NavItem icon={BookOpen} to="/upskill">Curriculum</NavItem>
-                </VStack>
             </Box>
 
             {/* Main Content */}
-            <Box flex="1" overflowY="auto" p="8">
+            <Box p="8">
                 <Box maxW="7xl" mx="auto">
                     {children}
                 </Box>
             </Box>
-        </Flex>
+        </Box>
     )
 }
 
