@@ -32,6 +32,7 @@ class AnalysisBase(SQLModel):
     raw_json: str
     agent_logs: str = Field(default="[]") # Store list of {step, prompt, response}
     job_id: Optional[int] = Field(default=None, foreign_key="job.id")
+    test_metadata: Optional[str] = Field(default=None)  # JSON: {"demo_label": "The Keyword Stuffer - Buzzwords with no substance", "purpose": "...", "success_criteria": "..."}
 
 class Analysis(AnalysisBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)

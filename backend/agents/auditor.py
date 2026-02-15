@@ -1,16 +1,37 @@
 from anthropic import AsyncAnthropic
 import json
+import logging
 from typing import Dict, Any
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, AUDITOR_MAX_TOKENS
+from exceptions import AuditorError
+from utils.agent_utils import AgentResponseParser
+from constants import AgentDefaults
+
+logger = logging.getLogger(__name__)
+
 
 class AuditorAgent:
+    """Agent responsible for auditing matching decisions for bias"""
+    
     def __init__(self):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+        self.parser = AgentResponseParser()
 
     async def audit_decision(self, match_result: Dict[str, Any], original_resume_text: str) -> Dict[str, Any]:
+        """
+        Audit a matching decision for potential bias.
+        
+        Args:
+            match_result: The matching result to audit
+            original_resume_text: Original resume text for context
+            
+        Returns:
+            Audit results with bias flags and scores
+            
+        Raises:
+            AuditorError: If audit fails
+        """
         prompt = f"""
         You are the Auditor Agent. Your job is to review the recruitment matching decision for BIAS.
         
@@ -38,20 +59,25 @@ class AuditorAgent:
         """
 
         try:
+            logger.info("Calling Auditor Agent")
             message = await self.client.messages.create(
                 model=DEFAULT_MODEL,
                 max_tokens=AUDITOR_MAX_TOKENS,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}]
             )
             
             content = message.content[0].text
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            json_str = content[start:end]
+            result = self.parser.extract_json(content)
             
-            return json.loads(json_str)
+            # Ensure required fields exist
+            result = self.parser.ensure_field(result, "flagged", False)
+            result = self.parser.ensure_field(result, "flags", [])
+            result = self.parser.ensure_field(result, "fairness_score", AgentDefaults.FALLBACK_FAIRNESS_SCORE)
+            result = self.parser.ensure_field(result, "audit_note", "Audit completed")
+            
+            logger.info(f"Auditor Agent completed: flagged={result['flagged']}")
+            return result
+            
         except Exception as e:
-            # Fallback for prototype safety
-            return {"flagged": False, "flags": [], "fairness_score": 100, "audit_note": "Audit passed (fallback)."}
+            logger.error(f"Auditor Agent failed: {e}", exc_info=True)
+            raise AuditorError(f"Failed to audit decision: {str(e)}")

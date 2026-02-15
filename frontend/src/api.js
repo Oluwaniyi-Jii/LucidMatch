@@ -5,8 +5,8 @@
 
 import axios from 'axios';
 
-// API Base URL - change this if your backend runs on a different port
-const API_BASE_URL = 'http://localhost:8080';
+// API Base URL - use environment variable or default to localhost:8000
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -102,7 +102,7 @@ export const quickMatch = async (resumeText, jobId) => {
     const formData = new FormData();
     formData.append('resume_text', resumeText);
     formData.append('job_id', jobId);
-    
+
     const response = await api.post('/api/demo/quick-match', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',

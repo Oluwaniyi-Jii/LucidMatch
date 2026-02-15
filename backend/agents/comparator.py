@@ -1,16 +1,37 @@
 from anthropic import AsyncAnthropic
 import json
+import logging
 from typing import Dict, Any
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, COMPARATOR_MAX_TOKENS
+from exceptions import ComparatorError
+from utils.agent_utils import AgentResponseParser
+
+logger = logging.getLogger(__name__)
+
 
 class ComparatorAgent:
+    """Agent responsible for comparing two candidates head-to-head"""
+    
     def __init__(self):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+        self.parser = AgentResponseParser()
 
     async def compare_candidates(self, profile_a: Dict[str, Any], profile_b: Dict[str, Any], job_context: str) -> Dict[str, Any]:
+        """
+        Compare two candidates for a specific role.
+        
+        Args:
+            profile_a: First candidate's profile
+            profile_b: Second candidate's profile
+            job_context: Job description and requirements
+            
+        Returns:
+            Comparison results with advantages and verdict
+            
+        Raises:
+            ComparatorError: If comparison fails
+        """
         prompt = f"""
         You are the Comparator Agent. Your goal is to provide a "Head-to-Head" analysis of two candidates for a specific role.
         
@@ -41,20 +62,19 @@ class ComparatorAgent:
         """
 
         try:
+            logger.info("Calling Comparator Agent")
             message = await self.client.messages.create(
                 model=DEFAULT_MODEL,
                 max_tokens=COMPARATOR_MAX_TOKENS,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}]
             )
             
             content = message.content[0].text
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            json_str = content[start:end]
+            result = self.parser.extract_json(content)
             
-            return json.loads(json_str)
+            logger.info("Comparator Agent completed successfully")
+            return result
+            
         except Exception as e:
-            print(f"Comparator Error: {e}")
-            return {"error": "Failed to compare candidates"}
+            logger.error(f"Comparator Agent failed: {e}", exc_info=True)
+            raise ComparatorError(f"Failed to compare candidates: {str(e)}")

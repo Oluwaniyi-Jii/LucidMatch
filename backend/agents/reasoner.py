@@ -1,10 +1,15 @@
 from anthropic import AsyncAnthropic
 import json
+import logging
 from typing import Dict, Any
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, REASONER_MAX_TOKENS
+from exceptions import ReasonerError
+from utils.agent_utils import AgentResponseParser
+from constants import AgentDefaults
+
+logger = logging.getLogger(__name__)
+
 
 class ReasonerAgent:
     """
@@ -14,6 +19,8 @@ class ReasonerAgent:
     
     def __init__(self):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+        self.parser = AgentResponseParser()
+
 
     async def match_role(self, candidate_profile: Dict[str, Any], job_description: str) -> Dict[str, Any]:
         prompt = f"""
@@ -248,40 +255,32 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no explanations, just the JSON o
 """
 
         try:
+            logger.info("Calling Reasoner Agent")
             message = await self.client.messages.create(
                 model=DEFAULT_MODEL,
                 max_tokens=4096,  # Increased for detailed response
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}]
             )
             
             content = message.content[0].text
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            json_str = content[start:end]
-            
-            result = json.loads(json_str)
+            result = self.parser.extract_json(content)
             
             # Ensure output has evidence array even if model misses it
-            if "evidence" not in result:
-                result["evidence"] = []
+            result = self.parser.ensure_field(result, "evidence", [])
             
             # Ensure backward compatibility with old format
-            result['match_score'] = result['overall_evaluation']['total_score']
-            result['confidence_score'] = 0.95 if result['overall_evaluation']['total_score'] >= 70 else 0.75
-            result['reasoning'] = result['overall_evaluation']['summary']
+            if "overall_evaluation" in result:
+                result['match_score'] = result['overall_evaluation']['total_score']
+                result['confidence_score'] = AgentDefaults.DEFAULT_CONFIDENCE if result['overall_evaluation']['total_score'] >= 70 else 0.75
+                result['reasoning'] = result['overall_evaluation']['summary']
+            else:
+                logger.warning("Missing overall_evaluation in response")
+                result['match_score'] = AgentDefaults.FALLBACK_MATCH_SCORE
+                result['confidence_score'] = AgentDefaults.DEFAULT_CONFIDENCE
             
+            logger.info(f"Reasoner Agent completed: match_score={result['match_score']}")
             return result
             
         except Exception as e:
-            print(f"Reasoner Error: {e}")
-            return {
-                "error": "Failed to evaluate candidate",
-                "match_score": 0,
-                "overall_evaluation": {
-                    "total_score": 0,
-                    "fit_level": "Low",
-                    "summary": "Evaluation failed"
-                }
-            }
+            logger.error(f"Reasoner Agent failed: {e}", exc_info=True)
+            raise ReasonerError(f"Failed to evaluate candidate: {str(e)}")

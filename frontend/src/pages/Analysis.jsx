@@ -110,7 +110,7 @@ const Analysis = () => {
                                     <List spacing={2}>
                                         {results.strengths.map((strength, i) => (
                                             <ListItem key={i} fontSize="sm" color="slate.600">
-                                                • {strength}
+                                                - {strength}
                                             </ListItem>
                                         ))}
                                     </List>
@@ -126,7 +126,7 @@ const Analysis = () => {
                                     <List spacing={2}>
                                         {results.concerns.map((concern, i) => (
                                             <ListItem key={i} fontSize="sm" color="slate.600">
-                                                • {concern}
+                                                - {concern}
                                             </ListItem>
                                         ))}
                                     </List>

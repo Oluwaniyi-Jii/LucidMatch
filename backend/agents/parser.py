@@ -1,16 +1,34 @@
 from anthropic import AsyncAnthropic
-import json
+import logging
 from typing import Dict, Any
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, PARSER_MAX_TOKENS
+from exceptions import ParserError
+from utils.agent_utils import AgentResponseParser
+
+logger = logging.getLogger(__name__)
+
 
 class ParserAgent:
+    """Agent responsible for parsing resumes and extracting structured information"""
+    
     def __init__(self):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+        self.parser = AgentResponseParser()
 
     async def parse_resume(self, text: str) -> Dict[str, Any]:
+        """
+        Parse resume text and extract competency clusters.
+        
+        Args:
+            text: Raw resume text
+            
+        Returns:
+            Structured profile data
+            
+        Raises:
+            ParserError: If parsing fails
+        """
         prompt = f"""
         You are an expert HR Parser Agent. Your goal is to extract skills and experience from a resume and structure them into "Competency Clusters".
         
@@ -35,21 +53,19 @@ class ParserAgent:
         """
 
         try:
+            logger.info("Calling Parser Agent")
             message = await self.client.messages.create(
                 model=DEFAULT_MODEL,
                 max_tokens=PARSER_MAX_TOKENS,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}]
             )
             
-            # reliable json parsing
             content = message.content[0].text
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            json_str = content[start:end]
+            result = self.parser.extract_json(content)
             
-            return json.loads(json_str)
+            logger.info("Parser Agent completed successfully")
+            return result
+            
         except Exception as e:
-            print(f"Parser Error: {e}")
-            return {"error": f"Failed to parse resume: {str(e)}"}
+            logger.error(f"Parser Agent failed: {e}", exc_info=True)
+            raise ParserError(f"Failed to parse resume: {str(e)}")

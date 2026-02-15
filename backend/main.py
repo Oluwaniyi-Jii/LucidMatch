@@ -4,6 +4,7 @@ from sqlmodel import Session, select, SQLModel
 from typing import List, Optional
 from contextlib import asynccontextmanager
 import json
+import logging
 from datetime import datetime
 
 from agents.parser import ParserAgent
@@ -14,6 +15,16 @@ from agents.comparator import ComparatorAgent
 from database import create_db_and_tables, get_session
 from models import Analysis, Job, JobCreate, JobRead, AnalysisRead
 from config import ALLOWED_ORIGINS
+from services import ResumeAnalysisService
+from utils import FileProcessor, validate_file_upload
+from exceptions import LucidMatchError, AgentError
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -39,6 +50,9 @@ reasoner = ReasonerAgent()
 auditor = AuditorAgent()
 strategist = StrategistAgent()
 comparator = ComparatorAgent()
+
+# Initialize Services
+analysis_service = ResumeAnalysisService(parser, reasoner, auditor, strategist)
 
 class CompareRequest(SQLModel):
     candidate_id_1: int
@@ -181,114 +195,60 @@ def get_curriculum(session: Session = Depends(get_session)):
 @app.post("/api/analyze")
 async def analyze_resume(
     file: UploadFile = File(...), 
-    job_id: int = Form(...), # Require Job ID
+    job_id: int = Form(...),
     session: Session = Depends(get_session)
 ):
-    agent_logs = []
+    """
+    Analyze a resume against a job posting.
     
-    def log_agent(agent_name, input_data, output_data):
-        agent_logs.append({
-            "agent": agent_name,
-            "timestamp": datetime.utcnow().isoformat(),
-            "input": str(input_data)[:2000] + "...", # Truncate for display safety
-            "output": json.dumps(output_data, indent=2)
-        })
-
+    Steps:
+    1. Validate file upload (size, type)
+    2. Verify job exists
+    3. Extract text from file
+    4. Run analysis pipeline
+    5. Save results to database
+    
+    Args:
+        file: Uploaded resume file (PDF or TXT)
+        job_id: ID of job to match against
+        session: Database session
+        
+    Returns:
+        Complete analysis results including match scores, audit, and curriculum
+    """
     try:
-        # 1. Fetch Job Details for Context
+        logger.info(f"Starting resume analysis for job_id={job_id}, file={file.filename}")
+        
+        # 1. Validate file upload
+        await validate_file_upload(file)
+        
+        # 2. Fetch job (verify it exists)
         job = session.get(Job, job_id)
         if not job:
-            raise HTTPException(status_code=404, detail="Job not found")
+            logger.warning(f"Job not found: job_id={job_id}")
+            raise HTTPException(status_code=404, detail=f"Job with ID {job_id} not found")
+        
+        # 3. Extract text content from file
+        text_content = await FileProcessor.extract_text(file)
+        
+        # 4. Run analysis pipeline
+        try:
+            response = await analysis_service.analyze(text_content, job, session)
+            logger.info(f"Analysis completed successfully for job_id={job_id}")
+            return response
             
-        job_context = f"""
-        Job Title: {job.title}
-        Department: {job.department}
-        Description: {job.description}
-        Requirements: {job.requirements}
-        """
-
-        # 2. Read File Content
-        contents = await file.read()
-        
-        # Handle different file types
-        if file.filename.lower().endswith('.pdf'):
-            # Parse PDF using pypdf
-            try:
-                from pypdf import PdfReader
-                from io import BytesIO
-                
-                pdf_file = BytesIO(contents)
-                reader = PdfReader(pdf_file)
-                
-                # Extract text from all pages
-                text_content = ""
-                for page in reader.pages:
-                    text_content += page.extract_text() + "\n"
-                
-                if not text_content.strip():
-                    text_content = "Resume Content (PDF extraction failed): Unable to extract text from PDF."
-            except Exception as e:
-                print(f"PDF parsing error: {e}")
-                text_content = "Resume Content (PDF extraction failed): Unable to extract text from PDF."
-        else:
-            # Handle text files
-            try:
-                text_content = contents.decode("utf-8")
-            except UnicodeDecodeError:
-                text_content = "Resume Content: Unable to decode file content."
-
-        # 3. Parser Agent
-        print("--- Calling Parser ---")
-        parsed_profile = await parser.parse_resume(text_content)
-        log_agent("Parser Agent", text_content, parsed_profile)
-        
-        # 4. Reasoner Agent (Using SPECIFIC Job Context)
-        print("--- Calling Reasoner ---")
-        match_result = await reasoner.match_role(parsed_profile, job_context)
-        log_agent("Reasoner Agent", {"profile": parsed_profile, "job": job_context}, match_result)
-        
-        # 5. Auditor Agent
-        print("--- Calling Auditor ---")
-        audit_result = await auditor.audit_decision(match_result, text_content)
-        log_agent("Auditor Agent", match_result, audit_result)
-        
-        # 6. Strategist Agent (if gaps exist)
-        print("--- Calling Strategist ---")
-        # Extract gaps from detailed criteria or fallback to key concerns
-        gaps_data = match_result.get("criteria_scores", {}).get("gaps_missing_skills", {})
-        skill_gaps = gaps_data.get("required_gaps", []) + gaps_data.get("preferred_gaps", [])
-        
-        if not skill_gaps:
-            skill_gaps = match_result.get("key_concerns", [])
-            
-        curriculum = await strategist.generate_curriculum(skill_gaps)
-        log_agent("Strategist Agent", skill_gaps, curriculum)
-        
-        # 7. Aggregate Response
-        response = {
-            "profile": parsed_profile,
-            "match": match_result,
-            "audit": audit_result,
-            "curriculum": curriculum,
-            "logs": agent_logs,
-            "resume_text": text_content  # Persist raw text for display
-        }
-
-        # 8. Save to DB linked to JOB
-        db_analysis = Analysis(
-            candidate_name="Anonymous Candidate", 
-            role=job.title,
-            match_score=match_result.get("match_score", 0),
-            raw_json=json.dumps(response),
-            agent_logs=json.dumps(agent_logs),
-            job_id=job.id
-        )
-        session.add(db_analysis)
-        session.commit()
-        session.refresh(db_analysis)
-        
-        return response
-
+        except LucidMatchError as e:
+            # Analysis failed, but we want to rollback the DB transaction
+            session.rollback()
+            logger.error(f"Analysis failed for job_id={job_id}: {e}")
+            raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+    
+    except HTTPException:
+        # Re-raise HTTP exceptions (they're already properly formatted)
+        raise
+    
     except Exception as e:
-        print(f"Error: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
+        # Catch any unexpected errors
+        session.rollback()
+        logger.error(f"Unexpected error in analyze_resume: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")

@@ -26,6 +26,18 @@ const JobDetail = () => {
     const { isOpen: isAuditOpen, onOpen: onAuditOpen, onClose: onAuditClose } = useDisclosure()
     const [isJobDetailsOpen, setIsJobDetailsOpen] = useState(false)
     const [resumeText, setResumeText] = useState(null)
+    const [demoMode, setDemoMode] = useState(() => {
+        return localStorage.getItem('demoMode') === 'true'
+    })
+
+    // Listen for demo mode changes from other pages
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setDemoMode(localStorage.getItem('demoMode') === 'true')
+        }
+        window.addEventListener('storage', handleStorageChange)
+        return () => window.removeEventListener('storage', handleStorageChange)
+    }, [])
 
     useEffect(() => {
         const fetchJob = async () => {
@@ -160,7 +172,7 @@ const JobDetail = () => {
                     <Heading size="lg" mb={1}>{job.title}</Heading>
                     <HStack>
                         <Badge colorScheme="brand">{job.department}</Badge>
-                        <Text color="slate.500">• {candidates.length} Candidates</Text>
+                        <Text color="slate.500">- {candidates.length} Candidates</Text>
                         <Button size="xs" variant="outline" leftIcon={<Icon as={BookOpen} />} onClick={() => setIsJobDetailsOpen(true)}>
                             View Job Details
                         </Button>
@@ -198,7 +210,25 @@ const JobDetail = () => {
                                     />
                                 </Td>
                                 <Td fontWeight="bold" color="slate.400">#{index + 1}</Td>
-                                <Td fontWeight="medium">{c.candidate_name}</Td>
+                                <Td>
+                                    <Stack spacing={1}>
+                                        <Text fontWeight="medium">{c.candidate_name}</Text>
+                                        {demoMode && c.test_metadata && (() => {
+                                            try {
+                                                const testInfo = typeof c.test_metadata === 'string'
+                                                    ? JSON.parse(c.test_metadata)
+                                                    : c.test_metadata
+                                                return (
+                                                    <Badge colorScheme="purple" fontSize="xs" maxW="300px">
+                                                        {testInfo.demo_label || testInfo.test_name}
+                                                    </Badge>
+                                                )
+                                            } catch (e) {
+                                                return null
+                                            }
+                                        })()}
+                                    </Stack>
+                                </Td>
                                 <Td isNumeric>
                                     <Badge colorScheme={c.match_score > 75 ? 'green' : c.match_score > 50 ? 'yellow' : 'red'} fontSize="0.9em">
                                         {c.match_score}%
@@ -277,6 +307,46 @@ const JobDetail = () => {
                                     {/* 1. OVERVIEW PANEL */}
                                     <TabPanel>
                                         <Stack spacing={6} p={4}>
+                                            {/* Demo Mode Test Info */}
+                                            {demoMode && selectedCandidate?.test_metadata && (() => {
+                                                try {
+                                                    const testInfo = typeof selectedCandidate.test_metadata === 'string'
+                                                        ? JSON.parse(selectedCandidate.test_metadata)
+                                                        : selectedCandidate.test_metadata
+
+                                                    return (
+                                                        <Card bg="purple.50" borderColor="purple.400" borderWidth="3px">
+                                                            <CardBody>
+                                                                <Stack spacing={4}>
+                                                                    <HStack align="start">
+                                                                        <Icon as={Terminal} color="purple.600" boxSize={6} />
+                                                                        <Box flex="1">
+                                                                            <Badge colorScheme="purple" fontSize="xs" mb={2}>DEMO MODE</Badge>
+                                                                            <Heading size="md" color="purple.800">
+                                                                                {testInfo.demo_label || testInfo.test_name || "Test Scenario"}
+                                                                            </Heading>
+                                                                        </Box>
+                                                                    </HStack>
+                                                                    {testInfo.purpose && (
+                                                                        <Box>
+                                                                            <Text fontSize="xs" fontWeight="bold" color="purple.700" mb={1}>What We're Testing:</Text>
+                                                                            <Text fontSize="sm">{testInfo.purpose}</Text>
+                                                                        </Box>
+                                                                    )}
+                                                                    {testInfo.success_criteria && (
+                                                                        <Box>
+                                                                            <Text fontSize="xs" fontWeight="bold" color="purple.700" mb={1}>Success Looks Like:</Text>
+                                                                            <Text fontSize="sm" whiteSpace="pre-wrap">{testInfo.success_criteria}</Text>
+                                                                        </Box>
+                                                                    )}
+                                                                </Stack>
+                                                            </CardBody>
+                                                        </Card>
+                                                    )
+                                                } catch (e) {
+                                                    return null
+                                                }
+                                            })()}
                                             <SimpleGrid columns={3} spacing={4}>
                                                 <Card bg="brand.50" variant="outline" borderColor="brand.100">
                                                     <CardBody p={4} textAlign="center">
@@ -372,7 +442,7 @@ const JobDetail = () => {
                                                             {/* Skills lists for specific criteria */}
                                                             {criterion.technical_skills_matched?.length > 0 && (
                                                                 <HStack wrap="wrap" spacing={2} mb={2}>
-                                                                    <Text fontSize="xs" fontWeight="bold" color="green.600">✓ Technical:</Text>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="green.600">[OK] Technical:</Text>
                                                                     {criterion.technical_skills_matched.map((skill, i) => (
                                                                         <Badge key={i} colorScheme="green" variant="subtle" size="sm">{skill}</Badge>
                                                                     ))}
@@ -381,7 +451,7 @@ const JobDetail = () => {
 
                                                             {criterion.soft_skills_matched?.length > 0 && (
                                                                 <HStack wrap="wrap" spacing={2} mb={2}>
-                                                                    <Text fontSize="xs" fontWeight="bold" color="blue.600">✓ Soft Skills:</Text>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="blue.600">[OK] Soft Skills:</Text>
                                                                     {criterion.soft_skills_matched.map((skill, i) => (
                                                                         <Badge key={i} colorScheme="blue" variant="subtle" size="sm">{skill}</Badge>
                                                                     ))}
@@ -390,7 +460,7 @@ const JobDetail = () => {
 
                                                             {criterion.required_gaps?.length > 0 && (
                                                                 <HStack wrap="wrap" spacing={2} mb={2}>
-                                                                    <Text fontSize="xs" fontWeight="bold" color="red.600">✗ Required Gaps:</Text>
+                                                                    <Text fontSize="xs" fontWeight="bold" color="red.600">[GAP] Required Gaps:</Text>
                                                                     {criterion.required_gaps.map((gap, i) => (
                                                                         <Badge key={i} colorScheme="red" variant="subtle" size="sm">{gap}</Badge>
                                                                     ))}
@@ -560,14 +630,14 @@ const JobDetail = () => {
                                             <Text fontSize="xs" fontWeight="bold" color="blue.600">CANDIDATE A</Text>
                                             <VStack align="start" spacing={1} pl={2} borderLeft="2px" borderColor="blue.200" mb={4}>
                                                 {comparisonData.advantage_a?.map((adv, i) => (
-                                                    <Text key={i} fontSize="sm" color="slate.600">• {adv}</Text>
+                                                    <Text key={i} fontSize="sm" color="slate.600">- {adv}</Text>
                                                 ))}
                                             </VStack>
 
                                             <Text fontSize="xs" fontWeight="bold" color="orange.600">CANDIDATE B</Text>
                                             <VStack align="start" spacing={1} pl={2} borderLeft="2px" borderColor="orange.200">
                                                 {comparisonData.advantage_b?.map((adv, i) => (
-                                                    <Text key={i} fontSize="sm" color="slate.600">• {adv}</Text>
+                                                    <Text key={i} fontSize="sm" color="slate.600">- {adv}</Text>
                                                 ))}
                                             </VStack>
                                         </Stack>

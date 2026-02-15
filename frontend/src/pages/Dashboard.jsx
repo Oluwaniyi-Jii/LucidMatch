@@ -1,5 +1,5 @@
-import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Skeleton } from '@chakra-ui/react'
-import { Plus, UploadCloud, Users, BarChart3 } from 'lucide-react'
+import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Skeleton, Switch, Badge, HStack } from '@chakra-ui/react'
+import { Plus, UploadCloud, Users, BarChart3, Beaker } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import apiClient from '../api/client'
@@ -7,6 +7,15 @@ import apiClient from '../api/client'
 const Dashboard = () => {
     const [stats, setStats] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [demoMode, setDemoMode] = useState(() => {
+        return localStorage.getItem('demoMode') === 'true'
+    })
+
+    const toggleDemoMode = () => {
+        const newValue = !demoMode
+        setDemoMode(newValue)
+        localStorage.setItem('demoMode', newValue.toString())
+    }
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -24,6 +33,25 @@ const Dashboard = () => {
 
     return (
         <Stack spacing={8}>
+            <HStack justify="flex-end">
+                <HStack
+                    p={2}
+                    px={4}
+                    bg={demoMode ? 'purple.50' : 'gray.50'}
+                    borderRadius='md'
+                    border='1px'
+                    borderColor={demoMode ? 'purple.200' : 'gray.200'}
+                >
+                    <Icon as={Beaker} color={demoMode ? 'purple.500' : 'gray.500'} />
+                    <Text fontSize='sm' fontWeight='medium'>Demo Mode</Text>
+                    <Switch
+                        colorScheme='purple'
+                        isChecked={demoMode}
+                        onChange={toggleDemoMode}
+                    />
+                    {demoMode && <Badge colorScheme='purple'>ON</Badge>}
+                </HStack>
+            </HStack>
             <Box>
                 <Heading size="lg" mb={2}>Welcome back</Heading>
                 <Text color="slate.500">Here's what's happening with your recruitment pipeline.</Text>

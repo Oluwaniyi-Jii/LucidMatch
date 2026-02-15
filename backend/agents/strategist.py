@@ -1,16 +1,35 @@
 from anthropic import AsyncAnthropic
 import json
+import logging
 from typing import Dict, Any, List
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, STRATEGIST_MAX_TOKENS
+from exceptions import StrategistError
+from utils.agent_utils import AgentResponseParser
+
+logger = logging.getLogger(__name__)
+
 
 class StrategistAgent:
+    """Agent responsible for generating upskilling curricula"""
+    
     def __init__(self):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+        self.parser = AgentResponseParser()
 
     async def generate_curriculum(self, skill_gaps: List[str]) -> Dict[str, Any]:
+        """
+        Generate upskilling curriculum for identified skill gaps.
+        
+        Args:
+            skill_gaps: List of skills to address
+            
+        Returns:
+            Curriculum with learning resources
+            
+        Raises:
+            StrategistError: If curriculum generation fails
+        """
         prompt = f"""
         You are the Strategist Agent. Your goal is to recommend a "Bridge Curriculum" to close the identified skill gaps.
         
@@ -49,19 +68,22 @@ class StrategistAgent:
         """
 
         try:
+            logger.info(f"Calling Strategist Agent for {len(skill_gaps)} skill gaps")
             message = await self.client.messages.create(
                 model=DEFAULT_MODEL,
                 max_tokens=STRATEGIST_MAX_TOKENS,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ]
+                messages=[{"role": "user", "content": prompt}]
             )
             
             content = message.content[0].text
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            json_str = content[start:end]
+            result = self.parser.extract_json(content)
             
-            return json.loads(json_str)
+            # Ensure curriculum field exists
+            result = self.parser.ensure_field(result, "curriculum", [])
+            
+            logger.info(f"Strategist Agent completed with {len(result.get('curriculum', []))} recommendations")
+            return result
+            
         except Exception as e:
-            return {"curriculum": [], "error": str(e)}
+            logger.error(f"Strategist Agent failed: {e}", exc_info=True)
+            raise StrategistError(f"Failed to generate curriculum: {str(e)}")
