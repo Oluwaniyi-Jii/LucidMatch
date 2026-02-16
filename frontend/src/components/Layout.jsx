@@ -55,9 +55,19 @@ const Layout = ({ children }) => {
                     align="center"
                     justify="space-between"
                 >
-                    <Text fontSize="2xl" fontWeight="bold" color="brand.600" letterSpacing="tight">
-                        Prism
-                    </Text>
+                    <Link to="/">
+                        <Text
+                            fontSize="2xl"
+                            fontWeight="bold"
+                            color="brand.600"
+                            letterSpacing="tight"
+                            cursor="pointer"
+                            _hover={{ color: 'brand.700' }}
+                            transition="color 0.2s"
+                        >
+                            Prism
+                        </Text>
+                    </Link>
                     <HStack spacing="2">
                         <NavItem icon={LayoutDashboard} to="/">Dashboard</NavItem>
                         <NavItem icon={Briefcase} to="/jobs">Job Board</NavItem>

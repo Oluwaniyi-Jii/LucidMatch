@@ -2,7 +2,7 @@ from anthropic import AsyncAnthropic
 import logging
 from typing import Dict, Any
 
-from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, PARSER_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, HAIKU_MODEL, PARSER_MAX_TOKENS
 from exceptions import ParserError
 from utils.agent_utils import AgentResponseParser
 
@@ -55,7 +55,7 @@ class ParserAgent:
         try:
             logger.info("Calling Parser Agent")
             message = await self.client.messages.create(
-                model=DEFAULT_MODEL,
+                model=HAIKU_MODEL,
                 max_tokens=PARSER_MAX_TOKENS,
                 messages=[{"role": "user", "content": prompt}]
             )

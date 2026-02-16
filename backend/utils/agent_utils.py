@@ -51,11 +51,51 @@ class AgentResponseParser:
             # Clean up common JSON formatting issues
             # Remove trailing commas before closing braces/brackets
             json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+            # Fix missing commas between array elements (common AI mistake)
+            json_str = re.sub(r'}(\s*){', r'},\1{', json_str)
+            # Fix missing commas after string values before next key
+            json_str = re.sub(r'"(\s*)"([a-zA-Z_])', r'",\1"\2', json_str)
             
             # Try parsing the cleaned JSON
-            result = json.loads(json_str)
-            logger.debug("Successfully extracted JSON from response")
-            return result
+            try:
+                result = json.loads(json_str)
+                logger.debug("Successfully extracted JSON from response")
+                return result
+            except json.JSONDecodeError as parse_error:
+                # Try aggressive repairs
+                logger.warning(f"First parse failed at char {parse_error.pos}, attempting JSON repair")
+                try:
+                    fixed_str = json_str
+                    # Additional fix: ensure proper comma placement
+                    fixed_str = re.sub(r'}\s*{', r'},{', fixed_str)
+                    # Fix incomplete final element - if the JSON ends abruptly
+                    if not fixed_str.rstrip().endswith(']}') and not fixed_str.rstrip().endswith('}}'):
+                        # Try to close incomplete structures
+                        if '"curriculum":' in fixed_str:
+                            # Count open/close brackets
+                            open_brackets = fixed_str.count('[')
+                            close_brackets = fixed_str.count(']')
+                            open_braces = fixed_str.count('{')
+                            close_braces = fixed_str.count('}')
+                            
+                            # Add missing closing characters
+                            if open_brackets > close_brackets:
+                                fixed_str += ']' * (open_brackets - close_brackets)
+                            if open_braces > close_braces:
+                                fixed_str += '}' * (open_braces - close_braces)
+                    
+                    result = json.loads(fixed_str)
+                    logger.info("Successfully repaired and parsed JSON")
+                    return result
+                except json.JSONDecodeError as final_error:
+                    # Log the problematic section for debugging
+                    logger.error(f"JSON repair failed. Error at position {final_error.pos}")
+                    if final_error.pos < len(json_str):
+                        context_start = max(0, final_error.pos - 100)
+                        context_end = min(len(json_str), final_error.pos + 100)
+                        logger.error(f"Context around error: ...{json_str[context_start:context_end]}...")
+                    # Raise the original error
+                    raise parse_error
             
         except (json.JSONDecodeError, ValueError) as e:
             # Log the error for debugging

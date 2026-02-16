@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any
 
-from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, AUDITOR_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, HAIKU_MODEL, AUDITOR_MAX_TOKENS
 from exceptions import AuditorError
 from utils.agent_utils import AgentResponseParser
 from constants import AgentDefaults
@@ -61,7 +61,7 @@ class AuditorAgent:
         try:
             logger.info("Calling Auditor Agent")
             message = await self.client.messages.create(
-                model=DEFAULT_MODEL,
+                model=HAIKU_MODEL,
                 max_tokens=AUDITOR_MAX_TOKENS,
                 messages=[{"role": "user", "content": prompt}]
             )

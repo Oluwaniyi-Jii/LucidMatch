@@ -36,5 +36,9 @@ AUDITOR_MAX_TOKENS = 1024
 STRATEGIST_MAX_TOKENS = 1024
 COMPARATOR_MAX_TOKENS = 1024
 
-# Model Configuration
-DEFAULT_MODEL = "claude-sonnet-4-5-20250929"
+# Model Configuration - Mixed Approach for Cost Optimization
+# Haiku: Fast, structured tasks (Parser, Auditor, Strategist, Comparator)
+# Sonnet: Complex evaluation tasks (Reasoner)
+HAIKU_MODEL = "claude-haiku-4-5-20251001"
+SONNET_MODEL = "claude-sonnet-4-5-20250929"
+DEFAULT_MODEL = "claude-opus-4-20250514"  # Fallback/legacy

@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any, List
 
-from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, STRATEGIST_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, HAIKU_MODEL, STRATEGIST_MAX_TOKENS
 from exceptions import StrategistError
 from utils.agent_utils import AgentResponseParser
 
@@ -51,6 +51,10 @@ class StrategistAgent:
         - LinkedIn Learning: https://www.linkedin.com/learning/search?keywords=[skill]
         - Codecademy: https://www.codecademy.com/search?query=[skill]
         
+        CRITICAL: Return ONLY valid JSON. Do not include any text before or after the JSON.
+        CRITICAL: Ensure all array elements are separated by commas.
+        CRITICAL: Do not include trailing commas before closing brackets.
+        
         OUTPUT FORMAT (JSON):
         {{
             "curriculum": [
@@ -70,7 +74,7 @@ class StrategistAgent:
         try:
             logger.info(f"Calling Strategist Agent for {len(skill_gaps)} skill gaps")
             message = await self.client.messages.create(
-                model=DEFAULT_MODEL,
+                model=HAIKU_MODEL,
                 max_tokens=STRATEGIST_MAX_TOKENS,
                 messages=[{"role": "user", "content": prompt}]
             )

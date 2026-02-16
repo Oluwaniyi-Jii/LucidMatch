@@ -77,7 +77,7 @@ const Dashboard = () => {
                     </CardBody>
                 </Card>
 
-                <Card bg={stats?.flagged_count > 0 ? "orange.50" : "white"} borderColor={stats?.flagged_count > 0 ? "orange.200" : "slate.200"}>
+                <Card bg={stats?.flagged_count > 0 ? "orange.50" : "white"} borderColor={stats?.flagged_count > 0 ? "orange.900" : "slate.900"} borderWidth="1px">
                     <CardBody>
                         <Stack spacing={2}>
                             <HStack spacing={2}>
@@ -127,7 +127,9 @@ const Dashboard = () => {
                                         key={item.id}
                                         p={3}
                                         bg="slate.50"
-                                        borderRadius="md"
+                                        borderRadius="0"
+                                        borderWidth="1px"
+                                        borderColor="slate.900"
                                         cursor="pointer"
                                         _hover={{ bg: "brand.50" }}
                                         onClick={() => navigate(`/jobs/${item.job_id}`)}
@@ -170,7 +172,9 @@ const Dashboard = () => {
                                         key={item.id}
                                         p={3}
                                         bg="slate.50"
-                                        borderRadius="md"
+                                        borderRadius="0"
+                                        borderWidth="1px"
+                                        borderColor="slate.900"
                                         cursor="pointer"
                                         _hover={{ bg: "brand.50" }}
                                         onClick={() => navigate(`/jobs/${item.job_id}`)}

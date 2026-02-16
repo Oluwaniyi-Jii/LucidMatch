@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any
 
-from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, COMPARATOR_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, HAIKU_MODEL, COMPARATOR_MAX_TOKENS
 from exceptions import ComparatorError
 from utils.agent_utils import AgentResponseParser
 
@@ -64,7 +64,7 @@ class ComparatorAgent:
         try:
             logger.info("Calling Comparator Agent")
             message = await self.client.messages.create(
-                model=DEFAULT_MODEL,
+                model=HAIKU_MODEL,
                 max_tokens=COMPARATOR_MAX_TOKENS,
                 messages=[{"role": "user", "content": prompt}]
             )

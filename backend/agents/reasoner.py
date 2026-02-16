@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any
 
-from config import ANTHROPIC_API_KEY, DEFAULT_MODEL, REASONER_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, SONNET_MODEL, REASONER_MAX_TOKENS
 from exceptions import ReasonerError
 from utils.agent_utils import AgentResponseParser
 from constants import AgentDefaults
@@ -257,7 +257,7 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no explanations, just the JSON o
         try:
             logger.info("Calling Reasoner Agent")
             message = await self.client.messages.create(
-                model=DEFAULT_MODEL,
+                model=SONNET_MODEL,
                 max_tokens=4096,  # Increased for detailed response
                 messages=[{"role": "user", "content": prompt}]
             )

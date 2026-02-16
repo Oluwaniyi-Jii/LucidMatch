@@ -354,7 +354,7 @@ const JobDetail = () => {
                                                             />
 
                                                             {criterion.evidence && (
-                                                                <Box mb={3} p={3} bg="slate.50" borderRadius="md">
+                                                                <Box mb={3} p={3} bg="slate.50" borderRadius="0" borderWidth="1px" borderColor="slate.900">
                                                                     <Text fontSize="xs" fontWeight="bold" color="slate.500" mb={1}>EVIDENCE</Text>
                                                                     <Text fontSize="sm" color="slate.700">{criterion.evidence}</Text>
                                                                 </Box>
@@ -480,14 +480,14 @@ const JobDetail = () => {
 
                                                             <Box>
                                                                 <Text fontSize="xs" fontWeight="bold" color="slate.500" mb={1}>PROMPT (INPUT)</Text>
-                                                                <Code display="block" whiteSpace="pre-wrap" p={2} borderRadius="md" fontSize="xs" maxH="150px" overflowY="auto">
+                                                                <Code display="block" whiteSpace="pre-wrap" p={2} borderRadius="0" borderWidth="1px" borderColor="slate.900" fontSize="xs" maxH="150px" overflowY="auto">
                                                                     {log.input}
                                                                 </Code>
                                                             </Box>
 
                                                             <Box>
                                                                 <Text fontSize="xs" fontWeight="bold" color="slate.500" mb={1}>COMPLETION (OUTPUT)</Text>
-                                                                <Code display="block" whiteSpace="pre-wrap" p={2} borderRadius="md" bg="slate.900" color="green.300" fontSize="xs" maxH="200px" overflowY="auto">
+                                                                <Code display="block" whiteSpace="pre-wrap" p={2} borderRadius="0" borderWidth="1px" borderColor="slate.900" bg="slate.900" color="green.300" fontSize="xs" maxH="200px" overflowY="auto">
                                                                     {log.output}
                                                                 </Code>
                                                             </Box>
@@ -539,7 +539,7 @@ const JobDetail = () => {
                                         <Heading size="sm" mb={4} color="slate.700">Detailed Breakdown</Heading>
                                         <VStack align="stretch" spacing={3}>
                                             {comparisonData.comparison_points?.map((point, i) => (
-                                                <HStack key={i} justify="space-between" p={3} bg="white" borderRadius="md" borderWidth="1px" borderColor="slate.200">
+                                                <HStack key={i} justify="space-between" p={3} bg="white" borderRadius="0" borderWidth="1px" borderColor="slate.900">
                                                     <Text fontSize="sm" fontWeight="bold" color="slate.600">{point.dimension}</Text>
                                                     <Badge colorScheme={point.winner === 'A' ? 'teal' : 'orange'}>
                                                         Winner: Candidate {point.winner}
@@ -594,7 +594,7 @@ const JobDetail = () => {
                     <ModalHeader>Original Resume</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody pb={6}>
-                        <Box p={4} bg="slate.50" borderRadius="md" borderWidth="1px" borderColor="slate.200">
+                        <Box p={4} bg="slate.50" borderRadius="0" borderWidth="1px" borderColor="slate.900">
                             <Text whiteSpace="pre-wrap" fontSize="sm" fontFamily="mono" color="slate.700">
                                 {resumeText}
                             </Text>
@@ -653,7 +653,7 @@ const JobDetail = () => {
                                 {selectedCandidate.audit.audit_note && (
                                     <Box>
                                         <Heading size="sm" mb={2} color="slate.700">Auditor Note</Heading>
-                                        <Box p={3} bg="slate.50" borderRadius="md" borderWidth="1px" borderColor="slate.200">
+                                        <Box p={3} bg="slate.50" borderRadius="0" borderWidth="1px" borderColor="slate.900">
                                             <Text fontSize="sm" color="slate.600" whiteSpace="pre-wrap">
                                                 {selectedCandidate.audit.audit_note}
                                             </Text>
@@ -661,7 +661,7 @@ const JobDetail = () => {
                                     </Box>
                                 )}
 
-                                <Box p={3} bg="yellow.50" borderRadius="md" borderWidth="1px" borderColor="yellow.200">
+                                <Box p={3} bg="yellow.50" borderRadius="0" borderWidth="1px" borderColor="yellow.900">
                                     <HStack spacing={2}>
                                         <Icon as={AlertCircle} color="yellow.600" />
                                         <Text fontSize="xs" color="yellow.800" fontWeight="semibold">

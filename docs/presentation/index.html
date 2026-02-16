@@ -12,17 +12,17 @@
            DESIGN SYSTEM TOKENS
            ======================================== */
         :root {
-            /* Brand Colors */
-            --brand-50: #F0F5FF;
-            --brand-100: #E0EAFF;
-            --brand-200: #C7D2FE;
-            --brand-300: #A5B4FC;
-            --brand-400: #818CF8;
-            --brand-500: #6366F1;
-            --brand-600: #4F46E5;
-            --brand-700: #4338CA;
-            --brand-800: #3730A3;
-            --brand-900: #312E81;
+            /* Brand Colors - Teal (matching LucidMatch app) */
+            --brand-50: #F0FDFA;
+            --brand-100: #CCFBF1;
+            --brand-200: #99F6E4;
+            --brand-300: #5EEAD4;
+            --brand-400: #2DD4BF;
+            --brand-500: #14B8A6;
+            --brand-600: #0D9488;
+            --brand-700: #0F766E;
+            --brand-800: #115E59;
+            --brand-900: #134E4A;
 
             /* Slate Colors */
             --slate-50: #F8FAFC;
@@ -147,34 +147,48 @@
             background: white;
             border-radius: var(--radius-xl);
             padding: var(--space-5);
-            border: 1px solid var(--slate-100);
-            box-shadow: var(--shadow-sm);
-            transition: transform var(--duration-fast) var(--ease-out);
+            border: 1px solid var(--slate-200);
+            box-shadow: none;
+            /* Flatter, more editorial look */
         }
 
-        .reveal .card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
+        /* Removed hover effects as requested */
 
         .reveal .card-brand {
             background: var(--brand-50);
-            border-color: var(--brand-200);
+            border: 1px solid transparent;
+        }
+
+        .reveal .card-brand h4,
+        .reveal .card-brand strong {
+            color: var(--brand-700);
         }
 
         .reveal .card-warning {
             background: #FFFBEB;
-            border-color: var(--color-warning);
+            border: 1px solid transparent;
+        }
+
+        .reveal .card-warning h4 {
+            color: #92400E;
         }
 
         .reveal .card-success {
             background: #F0FDF4;
-            border-color: var(--color-success);
+            border: 1px solid transparent;
+        }
+
+        .reveal .card-success h4 {
+            color: #166534;
         }
 
         .reveal .card-error {
             background: #FEF2F2;
-            border-color: var(--color-error);
+            border: 1px solid transparent;
+        }
+
+        .reveal .card-error h4 {
+            color: #991B1B;
         }
 
         .reveal table {
@@ -251,7 +265,7 @@
 
         .reveal .pipeline-step {
             background: white;
-            border: 2px solid var(--brand-200);
+            border: 1px solid var(--brand-200);
             border-radius: var(--radius-lg);
             padding: var(--space-3) var(--space-4);
             text-align: center;
@@ -259,56 +273,17 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .reveal .pipeline-step h4 {
-            font-size: var(--font-size-sm);
-            margin-bottom: var(--space-1);
-            color: var(--brand-600);
-        }
-
-        .reveal .pipeline-step p {
-            font-size: var(--font-size-xs);
-            color: var(--slate-500);
-            margin: 0;
-        }
-
-        .reveal .pipeline-arrow {
-            color: var(--brand-400);
-            font-size: var(--font-size-lg);
-            font-weight: var(--font-weight-bold);
-        }
-
-        .reveal .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--space-5);
-            text-align: left;
-        }
-
-        .reveal .grid-3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: var(--space-4);
-            text-align: left;
-        }
-
-        .reveal .status-positive::before {
-            content: "✓ ";
-            color: var(--color-success);
-            font-weight: var(--font-weight-bold);
-        }
-
-        .reveal .status-negative::before {
-            content: "✗ ";
-            color: var(--color-error);
-            font-weight: var(--font-weight-bold);
-        }
+        /* ... intervening code ... */
 
         .reveal .quote-block {
             font-size: var(--font-size-xl);
             font-weight: var(--font-weight-semibold);
             color: var(--brand-700);
-            border-left: 4px solid var(--brand-500);
-            padding-left: var(--space-5);
+            border: 1px solid var(--brand-200);
+            /* Full border instead of left stripe */
+            padding: var(--space-5);
+            border-radius: var(--radius-lg);
+            background: var(--brand-50);
             margin: var(--space-6) 0;
             font-style: italic;
         }
@@ -374,8 +349,9 @@
             padding: var(--space-4);
             border-radius: var(--radius-lg);
             margin-bottom: var(--space-3);
-            border-left: 3px solid var(--brand-500);
-            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--slate-200);
+            /* Full border instead of left accent */
+            box-shadow: none;
         }
 
         .reveal .feature-item p {
@@ -408,16 +384,21 @@
         }
 
         .candidate-card.flagged {
-            border: 2px solid var(--color-warning);
+            background: #FFFBEB;
+            border: 1px solid transparent;
+            /* No stripe */
         }
 
         .candidate-card.clean {
-            border: 2px solid var(--color-success);
+            background: #F0FDF4;
+            border: 1px solid transparent;
+            /* No stripe */
         }
 
         .candidate-card.rejected {
-            border: 2px solid var(--color-error);
             background: #FEF2F2;
+            border: 1px solid transparent;
+            /* No stripe */
         }
 
         .rubric-tag {
@@ -570,32 +551,58 @@
 
             <!-- SLIDE 6: Explainability & Governance (20 pts) - Bias Detection -->
             <section>
-                <span class="rubric-tag">Explainability &amp; Governance: 20 pts</span>
+                <span class="rubric-tag">Explainability & Governance: 20 pts</span>
                 <h2>Bias Detection and Fairness Checks</h2>
-                <div class="grid-3">
-                    <div class="card">
-                        <h4 style="color: var(--color-warning);">Socioeconomic Proxies</h4>
-                        <p>Elite university mentions</p>
-                        <p>Expensive hobbies (sailing, polo)</p>
-                        <p>Private club memberships</p>
-                    </div>
-                    <div class="card">
-                        <h4 style="color: var(--color-warning);">Gender Bias</h4>
-                        <p>Gendered keyword weighting</p>
-                        <p>Leadership language patterns</p>
-                        <p>Career gap penalties</p>
-                    </div>
-                    <div class="card">
-                        <h4 style="color: var(--color-warning);">Age Indicators</h4>
-                        <p>"Digital native" assumptions</p>
-                        <p>"Seasoned veteran" stereotypes</p>
-                        <p>Graduation year inference</p>
+
+                <!-- Unconventional radial arrangement -->
+                <div style="position: relative; margin: 2rem auto; padding: 2rem 0;">
+                    <div
+                        style="display: flex; justify-content: center; align-items: center; gap: 4rem; flex-wrap: wrap;">
+
+                        <!-- Left bias card -->
+                        <div class="card" style="flex: 0 1 280px; transform: rotate(-2deg); background: #FFFBEB;">
+                            <h4 style="color: #92400E; font-size: 0.85rem; margin-bottom: 0.75rem;">
+                                Socioeconomic Proxies</h4>
+                            <div style="font-size: 0.7rem; color: var(--slate-600); line-height: 1.6;">
+                                <div style="margin-bottom: 0.4rem;">→ Elite university mentions</div>
+                                <div style="margin-bottom: 0.4rem;">→ Expensive hobbies (sailing, polo)</div>
+                                <div>→ Private club memberships</div>
+                            </div>
+                        </div>
+
+                        <!-- Center bias card -->
+                        <div class="card" style="flex: 0 1 280px; transform: translateY(-1.5rem); background: #FEF2F2;">
+                            <h4 style="color: #991B1B; font-size: 0.85rem; margin-bottom: 0.75rem;">Gender
+                                Bias</h4>
+                            <div style="font-size: 0.7rem; color: var(--slate-600); line-height: 1.6;">
+                                <div style="margin-bottom: 0.4rem;">→ Gendered keyword weighting</div>
+                                <div style="margin-bottom: 0.4rem;">→ Leadership language patterns</div>
+                                <div>→ Career gap penalties</div>
+                            </div>
+                        </div>
+
+                        <!-- Right bias card -->
+                        <div class="card" style="flex: 0 1 280px; transform: rotate(2deg); background: #FFF7ED;">
+                            <h4 style="color: #92400E; font-size: 0.85rem; margin-bottom: 0.75rem;">Age
+                                Indicators</h4>
+                            <div style="font-size: 0.7rem; color: var(--slate-600); line-height: 1.6;">
+                                <div style="margin-bottom: 0.4rem;">→ "Digital native" assumptions</div>
+                                <div style="margin-bottom: 0.4rem;">→ "Seasoned veteran" stereotypes</div>
+                                <div>→ Graduation year inference</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <p style="margin-top: var(--space-4); text-align: center;">
-                    <span class="badge badge-warning">Flagged for Review</span>
-                    <span style="margin-left: var(--space-2); color: var(--slate-600);">Decisions with bias signals
-                        require human approval (Verified in Stress Tests)</span>
+
+                <!-- Bottom note with unique styling -->
+                <div style="margin-top: 2rem; display: flex; align-items: center; justify-content: center; gap: 1rem;">
+                    <div style="width: 60px; height: 2px; background: var(--color-warning);"></div>
+                    <span class="badge badge-warning" style="padding: 0.5rem 1.5rem; font-size: 0.75rem;">FLAGGED FOR
+                        REVIEW</span>
+                    <div style="width: 60px; height: 2px; background: var(--color-warning);"></div>
+                </div>
+                <p style="text-align: center; margin-top: 0.75rem; color: var(--slate-600); font-size: 0.75rem;">
+                    Decisions with bias signals require human approval (Verified in Stress Tests)
                 </p>
             </section>
 
@@ -604,39 +611,73 @@
                 <span class="rubric-tag">Technical Design: 20 pts</span>
                 <h2>Multi-Agent Architecture</h2>
                 <h3>Scalable, Documented, Secure</h3>
-                <div class="pipeline">
-                    <div class="pipeline-step">
-                        <h4>Parser</h4>
-                        <p>Extracts skills</p>
+
+                <!-- Vertical cascade instead of horizontal pipeline -->
+                <div style="display: flex; gap: 2.5rem; margin-top: 1.5rem;">
+                    <div style="flex: 1; position: relative;">
+                        <div
+                            style="position: absolute; left: 30px; top: 30px; bottom: 30px; width: 3px; background: linear-gradient(to bottom, var(--brand-200), var(--brand-600)); border-radius: 2px;">
+                        </div>
+
+                        <div style="position: relative; margin-bottom: 1.5rem; margin-left: 0;">
+                            <div
+                                style="position: absolute; left: 22px; top: 20px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-500); border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            </div>
+                            <div class="pipeline-step" style="margin-left: 60px; min-width: auto;">
+                                <h4>Parser</h4>
+                                <p>Extracts skills</p>
+                            </div>
+                        </div>
+
+                        <div style="position: relative; margin-bottom: 1.5rem; margin-left: 2rem;">
+                            <div
+                                style="position: absolute; left: 2px; top: 20px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-600); border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            </div>
+                            <div class="pipeline-step" style="margin-left: 40px; min-width: auto;">
+                                <h4>Reasoner</h4>
+                                <p>10-criteria scoring</p>
+                            </div>
+                        </div>
+
+                        <div style="position: relative; margin-bottom: 1.5rem; margin-left: 0;">
+                            <div
+                                style="position: absolute; left: 22px; top: 20px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-700); border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            </div>
+                            <div class="pipeline-step" style="margin-left: 60px; min-width: auto;">
+                                <h4>Auditor</h4>
+                                <p>Bias detection</p>
+                            </div>
+                        </div>
+
+                        <div style="position: relative; margin-left: 2rem;">
+                            <div
+                                style="position: absolute; left: 2px; top: 20px; width: 20px; height: 20px; border-radius: 50%; background: var(--brand-800); border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            </div>
+                            <div class="pipeline-step" style="margin-left: 40px; min-width: auto;">
+                                <h4>Strategist</h4>
+                                <p>Upskilling paths</p>
+                            </div>
+                        </div>
                     </div>
-                    <span class="pipeline-arrow">→</span>
-                    <div class="pipeline-step">
-                        <h4>Reasoner</h4>
-                        <p>10-criteria scoring</p>
-                    </div>
-                    <span class="pipeline-arrow">→</span>
-                    <div class="pipeline-step">
-                        <h4>Auditor</h4>
-                        <p>Bias detection</p>
-                    </div>
-                    <span class="pipeline-arrow">→</span>
-                    <div class="pipeline-step">
-                        <h4>Strategist</h4>
-                        <p>Upskilling paths</p>
-                    </div>
-                </div>
-                <div class="grid-2" style="margin-top: var(--space-4);">
-                    <div class="card">
-                        <h4>Security & Privacy</h4>
-                        <p class="status-positive">In-session processing only</p>
-                        <p class="status-positive">No persistent PII storage</p>
-                        <p class="status-positive">API key isolation</p>
-                    </div>
-                    <div class="card">
-                        <h4>Scalability</h4>
-                        <p class="status-positive">Stateless agents, parallelizable</p>
-                        <p class="status-positive">Each agent logs I/O for tracing</p>
-                        <p class="status-positive">Modular, extensible design</p>
+
+                    <!-- Side panels stacked -->
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="card" style="flex: 1;">
+                            <h4>Security & Privacy</h4>
+                            <div style="font-size: 0.7rem; line-height: 1.7;">
+                                <p class="status-positive">In-session processing only</p>
+                                <p class="status-positive">No persistent PII storage</p>
+                                <p class="status-positive">API key isolation</p>
+                            </div>
+                        </div>
+                        <div class="card" style="flex: 1;">
+                            <h4>Scalability</h4>
+                            <div style="font-size: 0.7rem; line-height: 1.7;">
+                                <p class="status-positive">Stateless agents, parallelizable</p>
+                                <p class="status-positive">Each agent logs I/O for tracing</p>
+                                <p class="status-positive">Modular, extensible design</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -704,7 +745,161 @@
                 </div>
             </section>
 
-            <!-- SLIDE 10: Summary & Closing -->
+            <!-- SLIDE 10: Cost Comparison -->
+            <section>
+                <h2>Cost Reality Check</h2>
+                <div style="display: flex; gap: 3rem; align-items: flex-start; margin-top: 2rem;">
+                    <!-- Left: Stacked pricing cards -->
+                    <div style="flex: 1.2;">
+                        <h4
+                            style="margin-bottom: 1.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--slate-400);">
+                            What Companies Pay Now</h4>
+
+                        <!-- Staggered cards -->
+                        <div style="position: relative; padding-left: 1rem;">
+                            <div class="card" style="margin-bottom: 1rem; margin-left: 0; background: #FEF2F2;">
+                                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                    <span style="font-size: 0.75rem; color: var(--slate-500);">Growth (1-50)</span>
+                                    <strong style="font-size: 1.1rem; color: #DC2626;">$150 - $400/mo</strong>
+                                </div>
+                                <p style="font-size: 0.65rem; color: var(--slate-400); margin-top: 0.25rem;">$1.8K -
+                                    $4.8K annually (Base + Seats)</p>
+                            </div>
+
+                            <div class="card" style="margin-bottom: 1rem; margin-left: 2rem; background: #FFFBEB;">
+                                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                    <span style="font-size: 0.75rem; color: var(--slate-500);">Mid-Market (50+)</span>
+                                    <strong style="font-size: 1.1rem; color: #D97706;">$800 - $2,500/mo</strong>
+                                </div>
+                                <p style="font-size: 0.65rem; color: var(--slate-400); margin-top: 0.25rem;">$10K - $30K
+                                    annually</p>
+                            </div>
+
+                            <div class="card" style="margin-left: 4rem; background: var(--slate-100);">
+                                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                    <span style="font-size: 0.75rem; color: var(--slate-500);">Enterprise</span>
+                                    <strong style="font-size: 1.1rem; color: var(--slate-600);">$1.5K -
+                                        $4.5K+/mo</strong>
+                                </div>
+                                <p style="font-size: 0.65rem; color: var(--slate-400); margin-top: 0.25rem;">$15K -
+                                    $50K+ annually (Custom)</p>
+                            </div>
+                        </div>
+
+                        <p
+                            style="font-size: 0.7rem; color: var(--color-error); margin-top: 1.5rem; padding-left: 1rem; font-style: italic;">
+                            ⚠ Hidden Costs: $60-100/user, Setup fees ($500+), Integrations
+                        </p>
+                    </div>
+
+                    <!-- Right: LucidMatch pricing -->
+                    <div style="flex: 1;">
+                        <h4
+                            style="margin-bottom: 1rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-600);">
+                            Prism Cost Per Analysis</h4>
+
+                        <div class="card card-success" style="padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <div style="text-align: center;">
+                                <div
+                                    style="font-size: 3rem; font-weight: 700; color: var(--brand-700); line-height: 1;">
+                                    $0.09</div>
+                                <div style="font-size: 0.75rem; color: var(--brand-600); margin-top: 0.5rem;">per resume
+                                    analyzed</div>
+                            </div>
+
+                            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--slate-100);">
+                                <div
+                                    style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem 1rem; font-size: 0.7rem;">
+                                    <span style="color: var(--slate-500);">Comparison</span>
+                                    <span style="text-align: right; font-weight: 600;">$0.10</span>
+
+                                    <span style="color: var(--slate-500);">Setup</span>
+                                    <span style="text-align: right; font-weight: 600;">$0</span>
+
+                                    <span style="color: var(--slate-500);">Minimum</span>
+                                    <span style="text-align: right; font-weight: 600;">$0</span>
+
+                                    <span style="color: var(--slate-500);">Contract</span>
+                                    <span style="text-align: right; font-weight: 600;">None</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reality scenarios - horizontal bars -->
+                        <div style="font-size: 0.7rem;">
+                            <div style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--slate-600);">10/mo</span>
+                                    <strong style="color: var(--brand-700);">$0.90</strong>
+                                </div>
+                                <div
+                                    style="height: 4px; background: var(--brand-100); border-radius: 2px; overflow: hidden;">
+                                    <div style="width: 3%; height: 100%; background: var(--brand-500);"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--slate-600);">50/mo</span>
+                                    <strong style="color: var(--brand-700);">$4.50</strong>
+                                </div>
+                                <div
+                                    style="height: 4px; background: var(--brand-100); border-radius: 2px; overflow: hidden;">
+                                    <div style="width: 15%; height: 100%; background: var(--brand-500);"></div>
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--slate-600);">100/mo</span>
+                                    <strong style="color: var(--brand-700);">$9.00</strong>
+                                </div>
+                                <div
+                                    style="height: 4px; background: var(--brand-100); border-radius: 2px; overflow: hidden;">
+                                    <div style="width: 30%; height: 100%; background: var(--brand-500);"></div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="color: var(--slate-600);">1,000/mo</span>
+                                    <strong style="color: var(--brand-700);">$90</strong>
+                                </div>
+                                <div
+                                    style="height: 4px; background: var(--brand-100); border-radius: 2px; overflow: hidden;">
+                                    <div style="width: 90%; height: 100%; background: var(--brand-500);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom callout - asymmetric -->
+                <div style="margin-top: 2.5rem; display: flex; align-items: center; gap: 2rem;">
+                    <div
+                        style="flex: 0 0 auto; font-size: 0.75rem; color: var(--slate-500); text-transform: uppercase; letter-spacing: 0.05em;">
+                        1,000 resumes/mo
+                    </div>
+                    <div
+                        style="flex: 1; height: 1px; background: linear-gradient(to right, var(--color-error), var(--brand-500)); opacity: 0.5;">
+                    </div>
+                    <div style="flex: 0 0 auto; text-align: right;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--brand-700);">
+                            $90/mo
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--slate-500); text-decoration: line-through;">
+                            was $800-$2.5K
+                        </div>
+                    </div>
+                </div>
+
+                <p
+                    style="text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--brand-700); font-weight: 600;">
+                    ~95% cost reduction • No seat fees • No setup costs
+                </p>
+            </section>
+
+            <!-- SLIDE 11: Summary & Closing -->
             <section>
                 <h2>LucidMatch: Summary</h2>
                 <table style="margin-bottom: var(--space-5);">
