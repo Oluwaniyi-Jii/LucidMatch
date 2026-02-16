@@ -272,6 +272,7 @@ const JobDetail = () => {
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Overview</Tab>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Decision Details</Tab>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Evidence</Tab>
+                                    <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Curriculum</Tab>
                                     <Tab _selected={{ bg: 'white', borderBottomColor: 'white', color: 'brand.600', fontWeight: 'bold' }}>Neural Logs</Tab>
                                 </TabList>
 
@@ -458,7 +459,78 @@ const JobDetail = () => {
                                         </Stack>
                                     </TabPanel>
 
-                                    {/* 3. NEURAL LOGS PANEL */}
+                                    {/* 4. CURRICULUM PANEL */}
+                                    <TabPanel>
+                                        <Stack spacing={6} p={4}>
+                                            <Box>
+                                                <Heading size="md" mb={2}>Upskilling Plan</Heading>
+                                                <Text color="slate.500">Personalized learning path to bridge identified skill gaps.</Text>
+                                                {selectedCandidate.curriculum?.estimated_total_time && (
+                                                    <Badge mt={2} colorScheme="purple">
+                                                        Estimated Time: {selectedCandidate.curriculum.estimated_total_time}
+                                                    </Badge>
+                                                )}
+                                            </Box>
+
+                                            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                                                {selectedCandidate.curriculum?.curriculum?.map((item, index) => {
+                                                    const getColor = (type) => {
+                                                        switch (type?.toLowerCase()) {
+                                                            case 'course': return 'orange';
+                                                            case 'article': return 'teal';
+                                                            default: return 'green';
+                                                        }
+                                                    }
+                                                    return (
+                                                        <Card key={index} variant="outline" _hover={{ bg: 'slate.50' }} transition="all 0.2s">
+                                                            <CardBody>
+                                                                <Stack spacing={3}>
+                                                                    <HStack justify="space-between" align="start">
+                                                                        <Badge colorScheme={getColor(item.type)}>{item.type}</Badge>
+                                                                        {item.platform && (
+                                                                            <Badge variant="outline">{item.platform}</Badge>
+                                                                        )}
+                                                                    </HStack>
+
+                                                                    <Box>
+                                                                        <Heading size="sm" mb={1}>{item.resource}</Heading>
+                                                                        <Text fontSize="xs" color="slate.500">Target Skill: {item.skill}</Text>
+                                                                    </Box>
+
+                                                                    {item.url ? (
+                                                                        <Button
+                                                                            as="a"
+                                                                            href={item.url}
+                                                                            target="_blank"
+                                                                            size="sm"
+                                                                            variant="outline"
+                                                                            colorScheme="brand"
+                                                                            rightIcon={<Icon as={BookOpen} />}
+                                                                            w="full"
+                                                                        >
+                                                                            Access Resource
+                                                                        </Button>
+                                                                    ) : (
+                                                                        <Button size="sm" isDisabled w="full">No Link Available</Button>
+                                                                    )}
+                                                                </Stack>
+                                                            </CardBody>
+                                                        </Card>
+                                                    )
+                                                })}
+                                            </SimpleGrid>
+
+                                            {(!selectedCandidate.curriculum?.curriculum || selectedCandidate.curriculum.curriculum.length === 0) && (
+                                                <Box textAlign="center" py={8} bg="slate.50" borderRadius="lg">
+                                                    <Icon as={CheckCircle2} boxSize={8} color="green.400" mb={3} />
+                                                    <Text fontWeight="bold" color="slate.600">No Major Skill Gaps</Text>
+                                                    <Text fontSize="sm" color="slate.500">This candidate matches the requirements well without specific upskilling needs.</Text>
+                                                </Box>
+                                            )}
+                                        </Stack>
+                                    </TabPanel>
+
+                                    {/* 5. NEURAL LOGS PANEL */}
                                     <TabPanel>
                                         <Stack spacing={6} p={4}>
                                             <HStack justify="space-between">

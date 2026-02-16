@@ -53,8 +53,16 @@ class AgentResponseParser:
             json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
             # Fix missing commas between array elements (common AI mistake)
             json_str = re.sub(r'}(\s*){', r'},\1{', json_str)
-            # Fix missing commas after string values before next key
-            json_str = re.sub(r'"(\s*)"([a-zA-Z_])', r'",\1"\2', json_str)
+            # Fix missing commas after string values before next key or value
+            # Matches "string" "next..." where next starts with alphanumeric (key, bool, null, number)
+            json_str = re.sub(r'"(\s*)"([a-zA-Z0-9_])', r'",\1"\2', json_str)
+            # Fix missing commas after literals (numbers, true, false, null) before next key
+            # Be careful not to match inside strings, but simple regex handles most "value" "key" cases
+            json_str = re.sub(r'(true|false|null|[0-9]+)(\s*)"', r'\1,\2"', json_str)
+            # Fix missing commas after closing structure before next key
+            json_str = re.sub(r'([}\]])(\s*)"', r'\1,\2"', json_str)
+            # Fix missing commas before objects/arrays
+            json_str = re.sub(r'"(\s*)([\{\[])', r'",\1\2', json_str)
             
             # Try parsing the cleaned JSON
             try:

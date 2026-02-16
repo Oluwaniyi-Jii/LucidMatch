@@ -79,9 +79,9 @@ const Governance = () => {
                             </HStack>
                             <StatLabel color="slate.500" fontWeight="bold" textTransform="uppercase" fontSize="xs">Bias Detection Rate</StatLabel>
                             <StatNumber color="slate.800">
-                                {data.flagged_count > 0 ? Math.round((data.flagged_count / (data.flagged_count + 10)) * 100) : 0}%
+                                {data.total_analyzed > 0 ? Math.round((data.flagged_count / data.total_analyzed) * 100) : 0}%
                             </StatNumber>
-                            <StatHelpText color="slate.400">Of potential issues caught</StatHelpText>
+                            <StatHelpText color="slate.400">Of all analyzed candidates</StatHelpText>
                         </Stat>
                     </CardBody>
                 </Card>

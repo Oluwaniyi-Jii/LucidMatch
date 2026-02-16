@@ -39,6 +39,19 @@ class ParserAgent:
         4. STRIP ALL PII (Personal Identifiable Information). Do not include names, emails, phone numbers, or addresses.
         5. Return ONLY valid JSON.
         
+        CRITICAL: NO HALLUCINATION & EVIDENCE VERIFICATION
+        1. "SKILLS" LISTS ARE NOT EVIDENCE.
+           - Text found in a comma-separated "Skills" list, "Keywords" section, or "Tags" MUST BE IGNORED unless the SAME skill is also described in the "Experience", "Summary" (if detailed), or "Projects" section.
+           - Example: If "React" is in the Skills list, but the Experience section only says "Fixed computers", you MUST NOT include "React" in any competency cluster.
+           - Example: If "Strategy" is in the Skills list, but the Experience only says "Did marketing", you MUST NOT include "Strategy".
+
+        2. IGNORE UNVERIFIED SKILLS:
+           - If a skill appears ONLY in a list and nowhere else, THROW IT AWAY. Do not output it.
+           - It is better to return an empty cluster than a hallucinated one.
+
+        3. SPARSE RESUME HANDLING:
+           - If the Experience section is vague (e.g., "Did work", "Managed team"), extract ONLY those exact words (e.g., "Management"). Do NOT infer "Leadership", "Mentoring", "Strategic Planning".
+        
         RESUME TEXT:
         {text}
         

@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Dict, Any
 
-from config import ANTHROPIC_API_KEY, SONNET_MODEL, REASONER_MAX_TOKENS
+from config import ANTHROPIC_API_KEY, OPUS_MODEL, REASONER_MAX_TOKENS
 from exceptions import ReasonerError
 from utils.agent_utils import AgentResponseParser
 from constants import AgentDefaults
@@ -116,34 +116,30 @@ GENERAL RULES:
 - Assign score 1-10 for each criterion based only on available evidence
 - If evidence is limited or unclear, assign lower score rather than guessing
 
-KEYWORD STUFFING DETECTION (CRITICAL):
-When evaluating Skills Match, Core Competency, and Quality of Experience, apply these rules:
+QUALITY CONTROL & ANTI-GAMING (CRITICAL):
+1. SPARSE RESUME / LOW EFFORT DETECTION:
+   - If the resume contains minimal information (e.g., only job titles, < 50 words total, or genetic statements like "Did marketing", "Used computers"), you MUST assign scores of 1-2 for:
+     * Quality of Experience
+     * Skills Match
+     * Core Competency
+     * Potential / Readiness
+   - "Did marketing" does NOT imply detailed knowledge of strategy, SEO, or analytics. Do not give benefit of the doubt.
+   - If description is extremely vague, assume NO competence.
 
-1. SKILLS MUST HAVE EVIDENCE: A skill listed in a "Skills" section is worth NOTHING without supporting evidence in Experience or Projects
-   - Example: Listing "Kubernetes" but only showing IT Support experience = 0 credit for Kubernetes
-   - Example: Listing "Machine Learning" but only building a calculator = 0 credit for ML
+2. NO HALLUCINATION:
+   - Do NOT infer skills or experience not explicitly written.
+   - Do NOT fill in gaps with "implied" knowledge.
+   - Evidence fields MUST contain actual text from the resume or "None provided".
 
-2. MISMATCH PENALTY: If the number of claimed technologies (10+) vastly exceeds demonstrated projects (1-3 simple ones), apply severe penalty
-   - This is a RED FLAG indicating resume padding
-   - Score Skills Match as LOW (1-3) regardless of keyword presence
+3. KEYWORD STUFFING:
+   - Skills listed without supporting evidence in Experience = 0 credit.
+   - Mismatch between claimed seniority and actual descriptions (e.g., "Senior" role with "fixed printer" description) = Low Score.
+   - Penalize "keyword dumps" where candidate lists 20+ technologies but shows 0 projects using them.
 
-3. EXPERIENCE-SKILL GAP: Compare claimed seniority to actual experience
-   - Claiming "Senior" skills with only IT Support/Help Desk background = LOW score
-   - Freelance "various projects" without specifics = unverifiable = LOW score
-
-4. PROJECT QUALITY CHECK:
-   - "Todo App", "Calculator", "Portfolio Website" are BEGINNER projects
-   - These do NOT demonstrate advanced skills like microservices, ML, or distributed systems
-   - Penalize heavily if advanced skills are claimed but only beginner projects shown
-
-5. CERTIFICATION QUALITY:
-   - "Started", "In Progress", "2-hour course" = NOT meaningful credentials
-   - Only completed, recognized certifications count as evidence
-
-6. QUANTIFICATION CHECK:
-   - Vague claims like "worked on projects" or "helped customers" = LOW evidence
-   - Specific metrics like "reduced latency by 40%" or "managed team of 12" = HIGH evidence
-   - Absence of ANY quantified achievements in a senior-level application = RED FLAG
+4. PROJECT/EXPERIENCE QUALITY:
+   - "Todo App", "Calculator", or generic course projects = Beginner level (Low Score).
+   - Vague claims ("worked on stuff") = Low Score.
+   - Lack of metrics/quantification in what should be a professional role = Low Score.
 
 OUTPUT FORMAT (JSON ONLY):
 {{
@@ -257,7 +253,7 @@ IMPORTANT: Return ONLY valid JSON. No markdown, no explanations, just the JSON o
         try:
             logger.info("Calling Reasoner Agent")
             message = await self.client.messages.create(
-                model=SONNET_MODEL,
+                model=OPUS_MODEL,
                 max_tokens=4096,  # Increased for detailed response
                 messages=[{"role": "user", "content": prompt}]
             )

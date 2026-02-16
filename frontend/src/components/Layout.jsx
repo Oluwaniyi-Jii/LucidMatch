@@ -62,6 +62,7 @@ const Layout = ({ children }) => {
                             color="brand.600"
                             letterSpacing="tight"
                             cursor="pointer"
+                            textTransform="uppercase"
                             _hover={{ color: 'brand.700' }}
                             transition="color 0.2s"
                         >

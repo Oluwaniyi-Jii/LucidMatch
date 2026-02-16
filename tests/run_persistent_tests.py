@@ -91,7 +91,8 @@ async def run_single_test(profile_id: str = None):
         'global-international-engineer': 'principal-engineer',
         'overqualified-phd': 'data-analyst-entry',
         'sparse-minimal-resume': 'marketing-manager',
-        'keyword-stuffer': 'senior-fullstack-engineer'
+        'keyword-stuffer': 'senior-fullstack-engineer',
+        'ultra-sparse-resume': 'marketing-manager'
     }
     
     # Filter to specific profile if requested

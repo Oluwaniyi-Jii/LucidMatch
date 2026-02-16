@@ -41,4 +41,5 @@ COMPARATOR_MAX_TOKENS = 1024
 # Sonnet: Complex evaluation tasks (Reasoner)
 HAIKU_MODEL = "claude-haiku-4-5-20251001"
 SONNET_MODEL = "claude-sonnet-4-5-20250929"
-DEFAULT_MODEL = "claude-opus-4-20250514"  # Fallback/legacy
+OPUS_MODEL = "claude-opus-4-20250514"
+DEFAULT_MODEL = OPUS_MODEL  # Fallback/legacy

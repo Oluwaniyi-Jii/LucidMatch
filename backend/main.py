@@ -254,6 +254,7 @@ def get_governance(session: Session = Depends(get_session)):
     return {
         "fairness_score": avg_fairness,
         "flagged_count": len(flagged),
+        "total_analyzed": len(analyses),
         "flagged_analyses": flagged
     }
 

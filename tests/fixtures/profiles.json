@@ -142,6 +142,23 @@
                 ],
                 "special_notes": "System should detect mismatch between buzzword-heavy skills section and actual experience. The resume lists every technology but provides no evidence of using them at depth."
             }
+        },
+        {
+            "id": "ultra-sparse-resume",
+            "name": "The Ultra Sparse",
+            "description": "User reported failing case with minimal text",
+            "resume_text": "J. DOE\n\nContact: j.doe@email.com\n\nSUMMARY\nMarketing professional. Good at jobs. Experienced.\n\nEXPERIENCE\n\nMarketing Manager\nCompany | Some City | 2020 - Present\n• Did marketing\n• Worked on campaigns\n• Used computers\n• Talked to people\n\nMarketing Associate\nPrevious Company | 2018 - 2020\n• Marketing stuff\n• Social media\n• Emails\n\nSKILLS\nMarketing, SEO, Content, Analytics, Communication, Strategy\n\nEDUCATION\nBachelor's Degree\nUniversity\n\nReferences available.",
+            "target_role": "Marketing Manager",
+            "expected_outcome": {
+                "match_level": "Very Low",
+                "expected_score_range": [
+                    1,
+                    25
+                ],
+                "expected_gaps": [
+                    "Everything"
+                ]
+            }
         }
     ]
 }
