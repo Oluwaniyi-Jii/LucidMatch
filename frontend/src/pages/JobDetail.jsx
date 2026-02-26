@@ -3,7 +3,25 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import apiClient from '../api/client'
 import SkillRadar from '../components/SkillRadar'
-import { AlertCircle, CheckCircle2, BookOpen, Search, Activity, Trash2, FileText } from 'lucide-react'
+import { AlertCircle, CheckCircle2, BookOpen, Search, Activity, Trash2, FileText, AlertTriangle } from 'lucide-react'
+
+const getCandidateStatus = (candidate) => {
+    try {
+        const data = JSON.parse(candidate.raw_json)
+        const isFlagged = data?.audit?.flagged
+        if (isFlagged) return { label: '⚠ Flagged', color: 'orange', icon: AlertTriangle }
+
+        const score = candidate.match_score
+        const recommendation = data?.match?.hiring_recommendation?.toLowerCase() || ''
+
+        if (recommendation.includes('strong hire') || score >= 80) return { label: 'Strong Hire', color: 'green', icon: CheckCircle2 }
+        if (recommendation.includes('hire') || score >= 65) return { label: 'Hire', color: 'teal', icon: CheckCircle2 }
+        if (recommendation.includes('maybe') || score >= 50) return { label: 'Maybe', color: 'yellow', icon: null }
+        return { label: 'Pass', color: 'red', icon: AlertCircle }
+    } catch {
+        return { label: 'New', color: 'gray', icon: null }
+    }
+}
 
 const JobDetail = () => {
     const { id } = useParams()
@@ -206,7 +224,16 @@ const JobDetail = () => {
                                         {c.match_score}%
                                     </Badge>
                                 </Td>
-                                <Td><Badge variant="outline">New</Badge></Td>
+                                <Td>
+                                    {(() => {
+                                        const status = getCandidateStatus(c)
+                                        return (
+                                            <Badge colorScheme={status.color} variant="outline">
+                                                {status.label}
+                                            </Badge>
+                                        )
+                                    })()}
+                                </Td>
                                 <Td>
                                     <HStack spacing={1}>
                                         <IconButton

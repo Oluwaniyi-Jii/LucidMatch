@@ -1,8 +1,49 @@
-import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Skeleton, HStack, Badge, VStack, Divider, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react'
-import { Plus, UploadCloud, Briefcase, AlertTriangle, ShieldCheck, FileText, TrendingUp, Eye } from 'lucide-react'
+import { Box, Heading, Text, SimpleGrid, Card, CardBody, Stack, Button, Icon, Skeleton, HStack, Badge, VStack, Divider } from '@chakra-ui/react'
+import { keyframes } from '@emotion/react'
+import { Plus, UploadCloud, Briefcase, AlertTriangle, ShieldCheck, FileText, TrendingUp, Eye, ArrowRight, Zap, Search as SearchIcon, Shield } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import apiClient from '../api/client'
+
+const pulseGlow = keyframes`
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+`
+
+const flowPulse = keyframes`
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+`
+
+const AgentNode = ({ icon, label, color, delay }) => (
+    <VStack spacing={2} flex="1" position="relative">
+        <Box
+            p={4}
+            bg={`${color}.50`}
+            border="1px solid"
+            borderColor={`${color}.200`}
+            animation={`${pulseGlow} 3s ease-in-out ${delay}s infinite`}
+        >
+            <Icon as={icon} boxSize={6} color={`${color}.500`} />
+        </Box>
+        <Text fontSize="xs" fontWeight="bold" color="slate.600" textTransform="uppercase" letterSpacing="wider">
+            {label}
+        </Text>
+    </VStack>
+)
+
+const FlowArrow = () => (
+    <Box flex="0 0 auto" display="flex" alignItems="center" pb="22px">
+        <Box
+            w="40px"
+            h="2px"
+            bgGradient="linear(to-r, brand.200, brand.400)"
+            backgroundSize="200% 100%"
+            animation={`${flowPulse} 2s linear infinite`}
+        />
+        <Icon as={ArrowRight} boxSize={4} color="brand.400" ml={-1} />
+    </Box>
+)
 
 const Dashboard = () => {
     const [stats, setStats] = useState(null)
@@ -25,9 +66,76 @@ const Dashboard = () => {
 
     return (
         <Stack spacing={8}>
-            <Box>
-                <Heading size="lg" mb={2}>Welcome back</Heading>
-                <Text color="slate.500">Here's what's happening with your recruitment pipeline.</Text>
+            {/* Hero Section */}
+            <Box
+                bg="brand.900"
+                color="white"
+                p={10}
+                position="relative"
+                overflow="hidden"
+                border="1px solid"
+                borderColor="slate.900"
+            >
+                {/* Decorative grid */}
+                <Box
+                    position="absolute"
+                    top={0} left={0} right={0} bottom={0}
+                    opacity={0.05}
+                    backgroundImage="linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)"
+                    backgroundSize="40px 40px"
+                />
+
+                <VStack spacing={6} position="relative" zIndex={1}>
+                    <VStack spacing={3} textAlign="center">
+                        <Badge
+                            bg="whiteAlpha.200"
+                            color="brand.200"
+                            px={3} py={1}
+                            fontSize="xs"
+                            fontWeight="bold"
+                            textTransform="uppercase"
+                            letterSpacing="widest"
+                        >
+                            Glass Box AI for Talent
+                        </Badge>
+                        <Heading size="xl" letterSpacing="tight">
+                            Where AI Meets Accountability
+                        </Heading>
+                        <Text color="whiteAlpha.800" maxW="2xl" fontSize="md" lineHeight="tall">
+                            Prism uses a multi-agent pipeline to match candidates beyond keywords — with full
+                            explainability, bias detection, and personalized upskilling for every decision.
+                        </Text>
+                    </VStack>
+
+
+                    <HStack spacing={4} pt={2}>
+                        <Button
+                            as={Link}
+                            to="/analysis"
+                            bg="white"
+                            color="brand.900"
+                            size="lg"
+                            leftIcon={<Icon as={UploadCloud} />}
+                            _hover={{ bg: 'brand.50', transform: 'translateY(-2px)' }}
+                            transition="all 0.2s"
+                            borderColor="white"
+                        >
+                            Analyze a Resume
+                        </Button>
+                        <Button
+                            as={Link}
+                            to="/governance"
+                            variant="outline"
+                            size="lg"
+                            color="white"
+                            borderColor="whiteAlpha.400"
+                            leftIcon={<Icon as={ShieldCheck} />}
+                            _hover={{ bg: 'whiteAlpha.100', borderColor: 'whiteAlpha.600' }}
+                        >
+                            View Governance
+                        </Button>
+                    </HStack>
+                </VStack>
             </Box>
 
             {/* Main Stats Grid */}
