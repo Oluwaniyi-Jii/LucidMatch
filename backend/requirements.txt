@@ -6,6 +6,7 @@ python-multipart>=0.0.6
 
 # Database
 sqlmodel>=0.0.32
+psycopg2-binary>=2.9.0
 
 # AI / LLM
 anthropic>=0.78.0

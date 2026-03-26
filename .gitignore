@@ -30,7 +30,7 @@ celerybeat-schedule
 
 # Node / Frontend
 node_modules/
-dist/
+# dist/  # Kept in repo for Render deployment
 build/
 .env.local
 .env.development.local

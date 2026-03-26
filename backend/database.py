@@ -1,8 +1,9 @@
 from sqlmodel import SQLModel, create_engine, Session
-from config import SQLITE_URL, DEBUG
+from config import DATABASE_URL, DEBUG
 
-connect_args = {"check_same_thread": False}
-engine = create_engine(SQLITE_URL, echo=DEBUG, connect_args=connect_args)
+# check_same_thread is only needed for SQLite
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, echo=DEBUG, connect_args=connect_args)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)

@@ -26,8 +26,15 @@ ALLOWED_ORIGINS = os.getenv(
 ).split(",")
 
 # Database
-SQLITE_FILE_NAME = "lucidmatch.db"
-SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
+# Use DATABASE_URL from Render (PostgreSQL) if available, otherwise SQLite for local dev
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    # Render gives postgres:// but SQLAlchemy needs postgresql://
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+if not DATABASE_URL:
+    SQLITE_FILE_NAME = "lucidmatch.db"
+    DATABASE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
 
 # Agent Configuration
 PARSER_MAX_TOKENS = 1024

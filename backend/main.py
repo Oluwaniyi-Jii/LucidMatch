@@ -1,11 +1,18 @@
+from pathlib import Path
+
 from fastapi import FastAPI, UploadFile, File, HTTPException, Depends, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from sqlmodel import Session, select, SQLModel
 from typing import List, Optional
 from contextlib import asynccontextmanager
 import json
 import logging
 from datetime import datetime
+
+# Path to the built React frontend
+FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend" / "dist"
 
 from agents.parser import ParserAgent
 from agents.reasoner import ReasonerAgent
@@ -110,10 +117,6 @@ async def compare_candidates(req: CompareRequest, session: Session = Depends(get
     
     return comparison
 
-
-@app.get("/")
-def read_root():
-    return {"message": "LucidMatch ATS API is Active"}
 
 # --- JOB ENDPOINTS ---
 
@@ -335,3 +338,16 @@ async def analyze_resume(
         session.rollback()
         logger.error(f"Unexpected error in analyze_resume: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+# --- SERVE FRONTEND ---
+# Mount the built React static assets (JS, CSS, images, etc.)
+if FRONTEND_DIR.is_dir():
+    app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "assets"), name="static-assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """Catch-all: serve static files or fall back to index.html for SPA routing."""
+        file_path = FRONTEND_DIR / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+        return FileResponse(FRONTEND_DIR / "index.html")
