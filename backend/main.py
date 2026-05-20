@@ -19,7 +19,7 @@ from agents.reasoner import ReasonerAgent
 from agents.auditor import AuditorAgent
 from agents.strategist import StrategistAgent
 from agents.comparator import ComparatorAgent
-from database import create_db_and_tables, get_session
+from database import create_db_and_tables, get_session, engine
 from models import Analysis, Job, JobCreate, JobRead, AnalysisRead
 from config import ALLOWED_ORIGINS
 from services import ResumeAnalysisService
@@ -33,10 +33,51 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+DEFAULT_JOBS = [
+    {
+        "title": "Software Engineer",
+        "department": "Engineering",
+        "description": "Build and maintain scalable web applications and backend services.",
+        "requirements": "Python, JavaScript, REST APIs, databases, version control (Git). Strong problem-solving skills and ability to work in an agile team."
+    },
+    {
+        "title": "Data Analyst",
+        "department": "Analytics",
+        "description": "Analyze data to generate business insights and support decision-making.",
+        "requirements": "SQL, Python or R, Excel, data visualization (Tableau or Power BI), statistical analysis, communication skills."
+    },
+    {
+        "title": "UX Researcher",
+        "department": "Product",
+        "description": "Conduct user research to inform product design and strategy.",
+        "requirements": "User interviews, survey design, usability testing, empathy, communication, Figma, qualitative and quantitative research methods."
+    },
+    {
+        "title": "Product Manager",
+        "department": "Product",
+        "description": "Define product vision, roadmap, and work cross-functionally to deliver features.",
+        "requirements": "Product strategy, stakeholder management, agile/scrum, data-driven decision making, communication, leadership."
+    },
+    {
+        "title": "Machine Learning Engineer",
+        "department": "AI/ML",
+        "description": "Design, build, and deploy machine learning models and pipelines.",
+        "requirements": "Python, TensorFlow or PyTorch, scikit-learn, data preprocessing, model evaluation, cloud platforms (AWS/GCP), MLOps."
+    },
+]
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     create_db_and_tables()
+    # Seed default jobs if none exist
+    with Session(engine) as session:
+        existing = session.exec(select(Job)).first()
+        if not existing:
+            for job_data in DEFAULT_JOBS:
+                session.add(Job(**job_data))
+            session.commit()
+            logger.info(f"Seeded {len(DEFAULT_JOBS)} default jobs")
     yield
     # Shutdown (if needed)
 
